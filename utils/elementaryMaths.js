@@ -1,110 +1,148 @@
 class ElemMaths {
-  static sum(...params) {
-    let sum = 0;
-    for (let k = 0; k < params.length; k++) {
-      sum += params[k];
-    }
-    return sum;
+  static async sum(...params) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        let sum = 0;
+        for (let k = 0; k < params.length; k++) {
+          sum += params[k];
+        }
+        resolve(sum);
+      }, 0);
+    });
   }
 
-  static sub(...params) {
-    let sub = params[0];
-    for (let k = 1; k < params.length; k++) {
-      sub -= params[k];
-    }
-    return sub;
+  static async sub(...params) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        let sub = params[0];
+        for (let k = 1; k < params.length; k++) {
+          sub -= params[k];
+        }
+        resolve(sub);
+      }, 0);
+    });
   }
 
-  static mul(...params) {
-    let mul = 1;
-    for (let k  = 0; k < params.length; k++) {
-      mul *= params[k];
-    }
-    return mul;
+  static async mul(...params) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        let mul = 1;
+        for (let k = 0; k < params.length; k++) {
+          mul *= params[k];
+        }
+        resolve(mul);
+      }, 0);
+    });
   }
 
-  static div(num, div) {
-    if (div === 0) {
-      return undefined;
-    }
-    const result =  num / div;
-    const precisionFactor = Math.pow(10, 10);
-      return Math.round(result * precisionFactor) / precisionFactor;
+  static async div(num, div) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (div === 0) {
+          reject(new Error("Division by zero"));
+        } else {
+          const result = num / div;
+          const precisionFactor = Math.pow(10, 10);
+          resolve(Math.round(result * precisionFactor) / precisionFactor);
+        }
+      }, 0);
+    });
   }
 
-  static mod(num, modulo) {
-    if (modulo === 0) {
-      return undefined;
-    }
-    return num % modulo;
+  static async mod(num, modulo) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (modulo === 0) {
+          reject(new Error("Modulo by zero"));
+        } else {
+          resolve(num % modulo);
+        }
+      }, 0);
+    });
   }
-
 }
 
-function evaluateMathExpression(expression) {
+async function evaluateMathExpression(expression) {
   try {
-    const splitCriteria = /([-+*/%])/;
+    const splitCriteria = /([-+*()/%])/;
     const terms = expression.split(splitCriteria);
     const refinedTerms = terms.map((term) => term.trim()).filter(Boolean);
 
-    let result = parseFloat(refinedTerms[0]);
-    let hasParentheses = false;
+    let operators = [];
+    let operands = [];
 
-    for (let k = 1; k < refinedTerms.length; k += 2) {
-      const operator = refinedTerms[k];
-      const operand = parseFloat(refinedTerms[k + 1]);
-
-      switch (operator) {
-        case "(":
-          hasParentheses = true;
-          break;
-        case ")":
-          hasParentheses = false;
-          break;
-        case "/":
-          if (hasParentheses) {
-            const endIndex = refinedTerms.indexOf(")", k + 1);
-            if (endIndex === -1) {
-              throw new Error("Error: Unmatched parentheses");
-            }
-            const subExpression = refinedTerms.slice(k + 2, endIndex).join("");
-            const subResult = evaluateMathExpression(subExpression);
-            result = ElemMaths.div(result, subResult);
-            k = endIndex;
-          } else {
-            result = ElemMaths.div(result, operand);
-          }
-          break;
-        case "*":
-          if (hasParentheses) {
-            const endIndex = refinedTerms.indexOf(")", k + 1);
-            if (endIndex === -1) {
-              throw new Error("Error: Unmatched parentheses");
-            }
-            const subExpression = refinedTerms.slice(k + 2, endIndex).join("");
-            const subResult = evaluateMathExpression(subExpression);
-            result = ElemMaths.mul(result, subResult);
-            k = endIndex;
-          } else {
-            result = ElemMaths.mul(result, operand);
-          }
-          break;
-        case "+":
-          result = ElemMaths.sum(result, operand);
-          break;
-        case "-":
-          result = ElemMaths.sub(result, operand);
-          break;
-        default:
-          throw new Error("Error: Invalid operand");
-          break;
+    for (let term of refinedTerms) {
+      if (term === "(") {
+        operators.push(term);
+      } else if (term === ")") {
+        while (operators.length && operators[operators.length - 1] !== "(") {
+          const operator = operators.pop();
+          const operand2 = operands.pop();
+          const operand1 = operands.pop();
+          operands.push(await applyOperator(operator, operand1, operand2));
+        }
+        operators.pop(); // Remove the "("
+      } else if (["+", "-", "*", "/", "%"].includes(term)) {
+        while (
+          operators.length &&
+          precedence(operators[operators.length - 1]) >= precedence(term)
+        ) {
+          const operator = operators.pop();
+          const operand2 = operands.pop();
+          const operand1 = operands.pop();
+          operands.push(await applyOperator(operator, operand1, operand2));
+        }
+        //makes sure operations of lower precedence are handled later
+        operators.push(term);
+      } else {
+        operands.push(parseFloat(term));
       }
     }
 
-    return result;
+    while (operators.length > 0) {
+      const operator = operators.pop();
+      const operand2 = operands.pop();
+      const operand1 = operands.pop();
+      operands.push(await applyOperator(operator, operand1, operand2));
+    }
+
+    return operands[0];
   } catch (error) {
     throw new Error("Error: " + error.message);
   }
 }
 
-module.exports = { ElemMaths, evaluateMathExpression };
+async function applyOperator(operator, operand1, operand2) {
+  switch (operator) {
+    case "+":
+      return await ElemMaths.sum(operand1, operand2);
+    case "-":
+      return await ElemMaths.sub(operand1, operand2);
+    case "*":
+      return await ElemMaths.mul(operand1, operand2);
+    case "/":
+      return await ElemMaths.div(operand1, operand2);
+    case "%":
+      return await ElemMaths.mod(operand1, operand2);
+    default:
+      throw new Error("Invalid operator");
+  }
+}
+
+function precedence(operator) {
+  switch (operator) {
+    case "+":
+    case "-":
+      return 1;
+    case "*":
+    case "/":
+    case "%":
+      return 2;
+    default:
+      return 0;
+  }
+}
+
+// module.exports = { ElemMaths, evaluateMathExpression };
+
+export default evaluateMathExpression;
