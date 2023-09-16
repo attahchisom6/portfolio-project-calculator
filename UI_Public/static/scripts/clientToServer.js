@@ -44,7 +44,6 @@ function lastOperationValue() {
 }
 
 function calculate() {
-  // Remove event listener from here
   const expression = encodeURIComponent(currentExpression);
   fetch(`/basic-calc?expression=${expression}`)
     .then((response) => response.json())
