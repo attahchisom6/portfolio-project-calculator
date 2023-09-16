@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Scientific Calculator</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <header class="navbar navbar-dark bg-dark">Basic</header>
+    <div class="container">
+        <!-- Calculator UI -->
+        <div class="calculator">
+            <!-- Calculator display -->
+            <div class="display">
+                <input type="text" id="display" class="form-control" value="0" disabled>
+                <div id="calc-mode" class="text-muted">Mode: Radians</div>
+            </div>
+            <!-- calculator buttons -->
+            <div class="button">
+                <div class="row">
+                    <div class="col-2"><button class="btn btn-secondary btn-block" onclick="addToDisplay('7')">7</button></div>
+                    <div class="col-2"><button class="btn btn-secondary btn-block" onclick="addToDisplay('8')">8</button></div>
+                    <div class="col-2"><button class="btn btn-secondary btn-block" onclick="addToDisplay('9')">9</button></div>
+                    <div class="col-2"><button class="btn btn-danger btn-block" onclick="deleteLastCharacter()">DEL</button></div>
+                    <div class="col-2"><button class="btn btn-danger btn-block" onclick="clearScreen()">AC</button></div>
+                </div>
+                <!-- Add other button rows here using Bootstrap classes -->
+            </div>
+        </div>
+    </div>
+    <!-- Include Bootstrap JavaScript (jQuery and Popper.js are required dependencies) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
