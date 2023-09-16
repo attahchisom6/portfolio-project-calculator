@@ -45,7 +45,7 @@ function lastOperationValue() {
 
 function calculate() {
   const expression = encodeURIComponent(currentExpression);
-  fetch(`/basic-calc?expression=${expression}`)
+  fetch(`/basicCalc?expression=${expression}`)
     .then((response) => response.json())
     .then((data) => {
       if (data !== undefined) {
