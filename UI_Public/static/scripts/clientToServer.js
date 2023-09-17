@@ -5,9 +5,9 @@ let addValue = '';
 
 function addToDisplay(value) {
   if (value === "÷") {
-    value = "/";
+    currentExpression += "/";
   } else if (value === "×") {
-    value = "*";
+    currentExpression += "*";
   } else if (value === "Ans") {
     currentExpression += addValue;
   } else {
@@ -23,7 +23,7 @@ function deleteLastCharacter() {
 
 function clearScreen() {
   currentExpression = '';
-  inputField.value = currentExpression;
+  inputField.value = '0';;
 }
 
 function lastOperationValue() {
@@ -56,7 +56,8 @@ function calculate() {
     })
     .catch((error) => {
       console.error("Error:", error);
-    });  
+    });
+  clearScreen();
 }
 
 function toggleMode() { // Fix syntax error here
