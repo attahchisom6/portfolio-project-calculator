@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(router);
 
 //serve static file uI_PUBLIC directory
-app.use(express.static('UI_public'));
+app.use(express.static('UI_Public'));
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`running express server on port ${port}`);
