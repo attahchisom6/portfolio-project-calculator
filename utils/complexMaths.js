@@ -1,6 +1,6 @@
 class complexMaths {
   static async squareX(x) {
-    return new Promise((resove) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         const num = parseFloat(x);
         resolve(num * num);
@@ -9,15 +9,15 @@ class complexMaths {
   }
 
   static async cubeX(x) {
-    return new Promíse((resolve) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         const num = parseFloat(x);
         resolve(num * num * num);
-      }), 0;
+      }, 0);
     });
   }
 
-  static async exponet(num, exp) {
+  static async exponent(num, exp) {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(Math.pow(num, exp));
@@ -26,14 +26,14 @@ class complexMaths {
   }
 
   static async squareRootX(x) {
-    return new promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
         const num = parseFloat(x);
-        if (x < 0) {
-          reject(new Error('input cannot be negative'));
+        if (num < 0) {
+          reject(new Error('Input cannot be negative'));
         }
-        resolve(Math.sqrt(x));
-      });
+        resolve(Math.sqrt(num));
+      }, 0);
     });
   }
 
@@ -46,31 +46,29 @@ class complexMaths {
   }
 
   static async nRoot(num, nroot) {
-    return ((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
-        // negative numbers with even nroot has no root in R (real numbers)
-        if (num < 0 && nroot % 2) {
-          reject(new Error(`${num} has no ${nroot}th in R`));
+        // negative numbers with even nroot have no root in R (real numbers)
+        if (num < 0 && nroot % 2 === 0) {
+          reject(new Error(`${num} has no ${nroot}th root in R`));
         }
 
-        // i will lead to 1/(num ** nroot)
+        // Division by zero
         if (num === 0 && nroot < 0) {
-          rejcect(new Error('Division By Zero'));
+          reject(new Error('Division By Zero'));
         }
 
-        // base/num is < 0 && nroot is odd
-        if (num < 0 && !(nroot % 2)) {
-          resolve(-Math.pow(-num, 1/nroot));
+        if (num < 0 && nroot % 2 !== 0) {
+          resolve(-Math.pow(-num, 1 / nroot));
         }
 
         // handle other cases
-
-        resolve(Math.pow(num, 1/nroot));
-    }, 0);
+        resolve(Math.pow(num, 1 / nroot));
+      }, 0);
     });
   }
 
-  static AbsX(x) {
+  static async absX(x) {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(Math.abs(x));
@@ -80,4 +78,3 @@ class complexMaths {
 }
 
 module.exports = complexMaths;
-// export default complexMaths;
