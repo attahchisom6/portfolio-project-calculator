@@ -85,6 +85,8 @@ function evaluateComplexMathExpression(expression) {
   const splitCriteria = /([+-*/()%]/;
   const terms = expression.split(splitCriteria);
   const refinedTerms = terms.map((term) => term.trim()).filter(Boolean);
+  let refinedExpression = '';
+  let operators = [];
 
   const trigFuncs = [ 'sin', 'cos', 'tan', 'cosec', 'sec', 'cot', 'asin', 'acos', 'atan' ];
   const logFuncs = [ 'In', 'log10', 'log', 'antilogIn', 'antilog10', 'antilog' ];
@@ -94,8 +96,24 @@ function evaluateComplexMathExpression(expression) {
 
   for (let term of refinedTerms) {
     // check for trigonometric function
-    if (trigFuncs.includes(term)) {
+    if (trigFuncs.includes(term) || logFuncs.includes(term)
+      || powerFuncs.includes(term) || otherFuncs.includes(term)) {
       const regex = new RegExp(`${term}${rex}`, 'g');
-      const match = 
-
-
+      const matches = expression.match(regex);
+      if (matches) {
+        const subExpression = matches.slice(term.length + 1, -1); // to remove trrig term along with bracket;
+        if expr.substring().includes(term) {
+          evaluateComplexMathExpression(subExpression);
+        }
+        const angle = parseFloat(subExpression);
+        const result = Trig.term(angle);
+        refinedExpression += result;
+      } else {
+        console.log("No complex math expression to evaluate");
+      }
+    } else {
+      refinedExpression = expression;
+    }
+  }
+  evaluateMathExpression(expression);
+}
