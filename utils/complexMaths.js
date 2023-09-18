@@ -1,6 +1,10 @@
-import evalateMathExpression from './utils/elementaryMaths'
-import Trig from './utils/elementaryMaths';
-import { Logarithms as loga } from './utils/elementaryMaths';
+// import evalateMathExpression from './utils/elementaryMaths'
+// import Trig from './utils/elementaryMaths';
+// import { Logarithms as loga } from './utils/elementaryMaths';
+const { evaluateMathExpression } =  require('./elementaryMaths');
+const Trig = require('./trig');
+const Logarithms = require('./logarithms');
+const loga = Logarithms;
 
 class complexMaths {
   static async squareX(x) {
@@ -81,66 +85,65 @@ class complexMaths {
   }
 }
 
-function evaluateComplexMathExpression(expression) {
-  const splitCriteria = /([+-*/()%]/;
-  const terms = expression.split(splitCriteria);
-  const refinedTerms = terms.map((term) => term.trim()).filter(Boolean);
-  let refinedExpression = '';
-  let operators = [];
+const trigFuncs = {
+  'sin': Trig.sine,
+  'cos': Trig.cos,
+  'tan': Trig.tan,
+  'cosec': Trig.cosec,
+  'sec': Trig.sec,
+  'cot': Trig.cot,
+  'asin': Trig.asin,
+  'acos': Trig.acos,
+  'atan': Trig.atan,
+};
 
-  const trigFuncs = {
-    'sin': Trig.sin,
-    'cos': Trig.cos,
-    'tan': Trig.tan,
-    'cosec': Trig.cosec,
-    'sec': Trig.sec,
-    'cot': Trig.cot,
-    'asin': Trig.asin,
-    'acos': Trig.acos,
-    'atan': Trig.atan,
-  };
+const logFuncs = {
+  'In': loga.In,
+  'log10': loga.log10,
+  'log': loga.log,
+  'antilogIn': loga.antilogIn,
+  'antilog10': loga.antilog10,
+  'antilog': loga.antilog,
+};
 
-  const logFuncs = {
-    'In': loga.In,
-    'log10': loga.log10,
-    'log': loga.log,
-    'antilogIn': loga.antilogIn,
-    'antilog10': loga.antilog10,
-    'antilog'; loga.antilog,
-  };
+const powerFuncs = {
+  'squareX': complexMaths.squareX,
+  'cubeX': complexMaths.cubeX,
+  'exponent': complexMaths.exponent,
+  'squareRootX': complexMaths.squareRootX,
+  'cubeRootX': complexMaths.cubeRootX,
+  'nRoot': complexMaths.nRoot,
+};
 
-  const powerFuncs = {
-    'squareX': complexMaths.squarex,
-    'cubeX': complex.cubeX,
-    'exponent': complexMaths.exponent,
-    'squareRootX': complexMaths.squareRootX,
-    'cubeRootX': complexMaths.cubeRootX,,
-    'nRoot': complexMaths.nRoot,
-  };
+const otherFuncs = { 'absX': complexMaths.absX };
 
-  const otherFuncs = [ 'absX' ]
-  const rex = \\((.*?)\\);
+async function evaluateComplexMathExpression(expression) {
+  const funcRegex = /([a-zA-Z]+)\(([^)]+)\)/g;
 
-  for (let term of refinedTerms) {
-    // check for trigonometric function
-    if (trigFuncs.includes(term) || logFuncs.includes(term)
-      || powerFuncs.includes(term) || otherFuncs.includes(term)) {
-      const regex = new RegExp(`${term}${rex}`, 'g');
-      const matches = expression.match(regex);
-      if (matches) {
-        const subExpression = matches.slice(term.length + 1, -1); // to remove trrig term along with bracket;
-        if expr.substring().includes(term) {
-          evaluateComplexMathExpression(subExpression);
-        }
-        const angle = parseFloat(subExpression);
-        const result = Trig.term(angle);
-        refinedExpression += result;
-      } else {
-        console.log("No complex math expression to evaluate");
-      }
-    } else {
-      refinedExpression = expression;
+  const result = expression.replace(funcRegex, (match, funcName, funcArgs) => {
+    const parsedArgs = funcArgs.split(',').map(arg => arg.trim());
+    const numericArgs = parsedArgs.map(arg => parseFloat(arg));
+
+    if (funcName in trigFuncs) {
+      const trigFunction = trigFuncs[funcName];
+      return trigFunction(...numericArgs);
+    } else if (funcName in logFuncs) {
+      const logFunction = logFuncs[funcName];
+      return logFunction(...numericArgs);
+    } else if (funcName in powerFuncs) {
+      const powerFunction = powerFuncs[funcName];
+      return powerFunction(...numericArgs);
+    } else if (funcName in otherFuncs) {
+      const otherFunction = otherFuncs[funcName];
+      return otherFunction(...numericArgs);
     }
-  }
-  evaluateMathExpression(expression);
+
+    return match; // If the function name is not recognized, return the original match
+  });
+
+  return evaluateMathExpression(result);
 }
+
+console.log("log number:", trigFuncs["sin"](67));
+
+module.exports = { evaluateComplexMathExpression , complexMaths};

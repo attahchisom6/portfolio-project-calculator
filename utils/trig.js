@@ -2,7 +2,7 @@ const PI = Math.PI;
 
 class Trig {
   constructor() {
-    this.CalcMode = 'Radians';
+    this._calcMode = 'Radians';
   }
 
   set CalcMode(mode) {
@@ -10,7 +10,11 @@ class Trig {
       console.log("Mode must be in degree or Radians");
       return;
     }
-    this.CalcMode = mode;
+    this._calcMode = mode;
+  }
+
+  get CalcMode() {
+    return this._calcMode;
   }
 
   static theta(angle) {
@@ -18,11 +22,9 @@ class Trig {
       case 'Degree':
         angle = (PI * angle) / 180;
         break;
-      case 'Radians':
+      default:
         angle = angle;
         break;
-      default:
-        return "Type Error: Angle must be in degree or radians"
     }
     return angle;
   }
