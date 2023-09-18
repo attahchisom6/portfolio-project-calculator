@@ -95,6 +95,7 @@ function evaluateComplexMathExpression(expression) {
   for (let term of refinedTerms) {
     // check for trigonometric function
     if (trigFuncs.includes(term)) {
-      const regex = new RegExp(
+      const regex = new RegExp(`${term}${rex}`, 'g');
+      const match = 
 
 
