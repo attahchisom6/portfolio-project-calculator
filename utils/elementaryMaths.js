@@ -108,7 +108,7 @@ async function evaluateMathExpression(expression) {
 
     return operands[0];
   } catch (error) {
-    throw new Error("Error: " + error.message);
+    throw error;
   }
 }
 
