@@ -1,3 +1,7 @@
+import evalateMathExpression from './utils/elementaryMaths'
+import Trig from './utils/elementaryMaths';
+import { Logarithms as loga } from './utils/elementaryMaths';
+
 class complexMaths {
   static async squareX(x) {
     return new Promise((resolve) => {
@@ -77,4 +81,20 @@ class complexMaths {
   }
 }
 
-module.exports = complexMaths;
+function evaluateComplexMathExpression(expression) {
+  const splitCriteria = /([+-*/()%]/;
+  const terms = expression.split(splitCriteria);
+  const refinedTerms = terms.map((term) => term.trim()).filter(Boolean);
+
+  const trigFuncs = [ 'sin', 'cos', 'tan', 'cosec', 'sec', 'cot', 'asin', 'acos', 'atan' ];
+  const logFuncs = [ 'In', 'log10', 'log', 'antilogIn', 'antilog10', 'antilog' ];
+  const powerFuncs = [ 'squareX', 'cubeX', 'exponent', 'squareRootX', 'cubeRootX', 'nRoot' ];
+  const otherFuncs = [ 'absX' ]
+  const rex = \\((.*?)\\);
+
+  for (let term of refinedTerms) {
+    // check for trigonometric function
+    if (trigFuncs.includes(term)) {
+      const regex = new RegExp(
+
+
