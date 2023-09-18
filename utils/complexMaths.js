@@ -88,9 +88,36 @@ function evaluateComplexMathExpression(expression) {
   let refinedExpression = '';
   let operators = [];
 
-  const trigFuncs = [ 'sin', 'cos', 'tan', 'cosec', 'sec', 'cot', 'asin', 'acos', 'atan' ];
-  const logFuncs = [ 'In', 'log10', 'log', 'antilogIn', 'antilog10', 'antilog' ];
-  const powerFuncs = [ 'squareX', 'cubeX', 'exponent', 'squareRootX', 'cubeRootX', 'nRoot' ];
+  const trigFuncs = {
+    'sin': Trig.sin,
+    'cos': Trig.cos,
+    'tan': Trig.tan,
+    'cosec': Trig.cosec,
+    'sec': Trig.sec,
+    'cot': Trig.cot,
+    'asin': Trig.asin,
+    'acos': Trig.acos,
+    'atan': Trig.atan,
+  };
+
+  const logFuncs = {
+    'In': loga.In,
+    'log10': loga.log10,
+    'log': loga.log,
+    'antilogIn': loga.antilogIn,
+    'antilog10': loga.antilog10,
+    'antilog'; loga.antilog,
+  };
+
+  const powerFuncs = {
+    'squareX': complexMaths.squarex,
+    'cubeX': complex.cubeX,
+    'exponent': complexMaths.exponent,
+    'squareRootX': complexMaths.squareRootX,
+    'cubeRootX': complexMaths.cubeRootX,,
+    'nRoot': complexMaths.nRoot,
+  };
+
   const otherFuncs = [ 'absX' ]
   const rex = \\((.*?)\\);
 
