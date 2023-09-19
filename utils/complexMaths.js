@@ -117,33 +117,114 @@ const powerFuncs = {
 
 const otherFuncs = { 'absX': complexMaths.absX };
 
-async function evaluateComplexMathExpression(expression) {
-  const funcRegex = /([a-zA-Z]+)\(([^)]+)\)/g;
+async function refineExpression(expression) {
+  const funcRegex = /(\w+)\s*\(([^)]+)\)/g;
 
-  const result = expression.replace(funcRegex, (match, funcName, funcArgs) => {
-    const parsedArgs = funcArgs.split(',').map(arg => arg.trim());
-    const numericArgs = parsedArgs.map(arg => parseFloat(arg));
+  async function evaluateTerm(match) {
+    console.log("Matching:", match);
 
-    if (funcName in trigFuncs) {
-      const trigFunction = trigFuncs[funcName];
-      return trigFunction(...numericArgs);
-    } else if (funcName in logFuncs) {
-      const logFunction = logFuncs[funcName];
-      return logFunction(...numericArgs);
-    } else if (funcName in powerFuncs) {
-      const powerFunction = powerFuncs[funcName];
-      return powerFunction(...numericArgs);
-    } else if (funcName in otherFuncs) {
-      const otherFunction = otherFuncs[funcName];
-      return otherFunction(...numericArgs);
+    const funcName = match.split('(')[0];
+    const args = match.split('(')[1].slice(0, -1);
+
+    console.log("Function Name:", funcName);
+    console.log("Arguments:", args);
+
+    let recursiveResult = args; // Initialize with the argument string
+
+    // Recursive loop to evaluate nested expressions
+    while (funcRegex.test(recursiveResult)) {
+      recursiveResult = await recursiveResult.replaceAsync(funcRegex, async (match) => {
+        console.log(match);
+        return await evaluateTerm(match); // Recursively evaluate nested expressions
+      });
+    }
+    console.log("These are the recursive result:", recursiveResult);
+    
+    // function to handle wen the subexpression contains only number
+    async isSubExprNum(recursiveResult) {
+        const splitField = recursiveResult.split(/([-+*/()%])/).map((term) => term.trim()).filter(Boolean);
+        console.log(splitField);
+        let expr = "";
+        for (k = 0; k < splitField.length; k += 2) {
+        const numList = [];
+
+        const operand = splitField[k];
+        const operator = splitField[k + 1];
+        if (!parseFloat(operand)) {
+          continue;
+      } else {
+        numList.push(operand);
+      }
+      expr = numlist.join(operator);
     }
 
-    return match; // If the function name is not recognized, return the original match
-  });
+    co
 
-  return evaluateMathExpression(result);
+    if (funcName in trigFuncs) {
+      try {
+        const result = await trigFuncs[funcName](...recursiveResult.split(',').map(arg => parseFloat(arg.trim())));
+        console.log("Result:", result);
+        return result;
+      } catch (error) {
+        console.log("Error in trigFuncs:", error);
+        throw new Error(`${funcName}(${args})`);
+      }
+    } else if (funcName in logFuncs) {
+      try {
+        const result = await logFuncs[funcName](parseFloat(await recursiveResult));
+        console.log(`logFuncs[funcName](parseFloat(await ${recursiveResult}))`);
+        console.log("Result:", result);
+        return result.toString();
+      } catch (error) {
+        console.log("Error in logFuncs:", error);
+        return `${funcName}(${await recursiveResult})`;
+      }
+    } else if (funcName in powerFuncs) {
+      try {
+        const result = await powerFuncs[funcName](parseFloat(await recursiveResult));
+        console.log("Result:", result);
+        return result.toString();
+      } catch (error) {
+        console.log("Error in powerFuncsFuncs:", error);
+        return `${funcName}(${await recursiveResult})`;
+      }
+    } else if (funcName in otherFuncs) {
+      try {
+        const result = await otherFuncs[funcName](parseFloat(await recursiveResult));
+        console.log("Result:", result);
+        return result.toString();
+      } catch (error) {
+        console.log("Error in othetFuncs:", error);
+        return `${funcName}(${await recursiveResult})`;
+      }
+    }
+  }
+
+  // Use regex with 'g' flag to find and replace all function calls with their results
+  while (funcRegex.test(expression)) {
+    expression = await expression.replaceAsync(funcRegex, async (match) => {
+      const result = await evaluateTerm(match);
+      return result.toString(); // Convert the result back to a string
+    });
+  }
+
+  return expression;
 }
 
-console.log("log number:", trigFuncs["sin"](67));
+// This polyfill enables replaceAsync for older Node.js versions
+String.prototype.replaceAsync = async function (regex, asyncFn) {
+  const promises = [];
+  this.replace(regex, (match, ...args) => {
+    const promise = asyncFn(match, ...args);
+    promises.push(promise);
+  });
+  const results = await Promise.all(promises);
+  return this.replace(regex, () => results.shift());
+};
 
-module.exports = { evaluateComplexMathExpression , complexMaths};
+async function evaluateComplexMathExpression(expression) {
+  expression = await refineExpression(expression);
+  return await evaluateMathExpression(expression);
+}
+
+module.exports = { evaluateComplexMathExpression, refineExpression, complexMaths };

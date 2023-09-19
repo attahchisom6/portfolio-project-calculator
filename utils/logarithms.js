@@ -9,7 +9,7 @@ class Logarithms {
   }
 
   // For logarithm in base 10
-  static log10(x) {
+  static log(x) {
     if (x < 0) {
       console.error('Invalid input: Number  be greater than or equal to zero');
       return;
@@ -18,7 +18,7 @@ class Logarithms {
   }
 
   // customize logarithm
-  static log(x, base) {
+  static logb(x, base) {
     if (x < 0 || base < 0) {
       console.error('Invalid imput: Number and base must be greater than or equal to 0');
       return;
@@ -32,12 +32,12 @@ class Logarithms {
   }
 
   // Antilogarithm for base 10
-  static antilog10(y) {
+  static antilog(y) {
     return Math.pow(10, y);
   }
 
   // custom Antilogarithm
-  static antilog(y, base) {
+  static antilogb(y, base) {
     return Math.pow(base, y);
   }
 }
