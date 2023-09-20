@@ -171,6 +171,9 @@ async function refineExpression(expression) {
       const operand = splitField[k];
       const operator = splitField[k + 1];
 
+      if (!operator) {
+        operator = 'setFlag';
+      }
       exprList.push(operand);
       operators.push(operator);
       console.log("expList", exprList);
@@ -179,20 +182,17 @@ async function refineExpression(expression) {
 
     if (isFloatParsable(exprList)) {
       expr = exprList[0];
-      for (let k = 0; k < operators.length; k++) {
-        expr += operators[k] + exprList[k + 1];
+      for (let k = 0; k < operators.length; k += 1) {
+        if (operators[k] === "setFlag") {
+          recursiveResult = recursiveResutlt;
+          console.log('In this block mutiple float arguments were passed:', recursiveResult);
+        } else {
+          expr += operators[k] + exprList[k + 1];
+          recursiveResult = await evaluateMathExpression(expr);
+        }
       }
       console.log('This is expr:', expr);
-      recursiveResult = await evaluateMathExpression(expr);
       console.log('When expr has only numbers, recursiveResult:', recursiveResult);
-      if (operators.length === 0 || operators === undefined || operators === null) {
-        const argsArray = recursiveResult.split(',').map(arg => parseFloat(arg.trim()));
-        if (argsArray.length === 1) {
-          recursiveResult = argsArray[0];
-        }
-        recursiveResult = argsArray;
-        console.log("recursiveResult wen operators kist is empty", recursiveResult);
-      }
     } else {
       recursiveResult = recursiveResult;
       console.log("When expr has terms with a function call, recursiveResult are not numbers:", recursiveResult);
@@ -222,8 +222,12 @@ async function refineExpression(expression) {
       try {
         recursiveResult = recursiveResult.toString();
         const result = await (async () => {
-          const argsArray = Array.isArray(recursiveResult) ? recursiveResult : [recursiveResult];
-          return await logFuncs[funcName](argsArray[0]);
+          const argsArray = recursiveResult.split(',').map((arg) => parseFloat(arg.trim()));
+          if (argsArray.length === 1 && !isNaN(argsArray[0])) {
+            return await logFuncs[funcName](argsArray[0]);
+          } else {
+            return await logFuncs[funcName](...argsArray);
+          }
         })();
 
         console.log("Result:", result);
