@@ -169,7 +169,7 @@ async function refineExpression(expression) {
 
     for (let k = 0; k < splitField.length; k += 2) {
       const operand = splitField[k];
-      const operator = splitField[k + 1];
+      let operator = splitField[k + 1];
 
       if (!operator) {
         operator = 'setFlag';
@@ -184,7 +184,7 @@ async function refineExpression(expression) {
       expr = exprList[0];
       for (let k = 0; k < operators.length; k += 1) {
         if (operators[k] === "setFlag") {
-          recursiveResult = recursiveResutlt;
+          recursiveResult = recursiveResult;
           console.log('In this block mutiple float arguments were passed:', recursiveResult);
         } else {
           expr += operators[k] + exprList[k + 1];
