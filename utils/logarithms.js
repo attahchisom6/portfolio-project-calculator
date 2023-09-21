@@ -42,4 +42,6 @@ class Logarithms {
   }
 }
 
-module.exports = Logarithms;
+// module.exports = Logarithms;
+
+export default Logarithms;

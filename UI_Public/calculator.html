@@ -1,57 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basic Scientific Calculator</title>
-    <link rel="stylesheet" href="static/styles/header.css">
-    <link rel="stylesheet" href="static/styles/body.css">
-    <link rel="stylesheet" href="static/styles/footer.css">
-  </head>
-  <body>
-    <header>The God of Moses is Great!</header>
-    <!-- Calculator UI -->
-    <div class="calculator">
-      <!-- Calculator display -->
-      <div class="display">
-        <div class="input-container">
-          <input type="text" id="display" value="0" disabled>
-          <div id="calc-mode">Rad</div>
-        </div>
-      </div>
-      <!-- calculator buttons -->
-      <div class="button">
-        <div class="row">
-          <div class="number" onclick="addToDisplay('7')">7</div>
-          <div class="number" onclick="addToDisplay('8')">8</div>
-          <div class="number" onclick="addToDisplay('9')">9</div>
-          <div class="operator" onclick="deleteLastCharacter()">DEL</div>
-          <div class="operator" onclick="clearScreen()">AC</div>
-        </div>
-        <div class="row">
-          <div class="number" onclick="addToDisplay('4')">4</div>
-          <div class="number" onclick="addToDisplay('5')">5</div>
-          <div class="number" onclick="addToDisplay('6')">6</div>
-          <div class="operator" onclick="addToDisplay('×')">×</div>
-          <div class="operator" onclick="addToDisplay('÷')">÷</div>
-        </div>
-        <div class="row">
-          <div class="number" onclick="addToDisplay('1')">1</div>
-          <div class="number" onclick="addToDisplay('2')">2</div>
-          <div class="number" onclick="addToDisplay('3')">3</div>
-          <div class="operator" onclick="addToDisplay('+')">+</div>
-          <div class="operator" onclick="addToDisplay('-')">-</div>
-        </div>
-        <div class="row">
-          <div class="number" onclick="addToDisplay('0')">0</div>
-          <div class="operator" onclick="addToDisplay('.')">.</div>
-          <div class="operator" onclick="toggleMode()">Mode</div>
-          <div class="operator" onclick="lastOperationValue()">Ans</div>
-          <div class="operator" onclick="calculate()">=</div>
-        </div>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Basic Scientific Calculator</title>
+  <link rel="stylesheet" href="static/styles/header.css">
+  <link rel="stylesheet" href="static/styles/body.css">
+  <link rel="stylesheet" href="static/styles/footer.css">
+</head>
+<body>
+  <header>The God of Moses is Great!</header>
+  <!-- Calculator UI -->
+  <div class="calculator">
+    <!-- Calculator display -->
+    <div class="display">
+      <div class="input-container">
+        <input type="text" id="display" value="0" disabled>
+        <div id="calc-mode">Rad</div>
+        <div id="shift-btn"></div>
       </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="static/scripts/clientToServer.js"></script>
-  </body>
+    <!-- calculator buttons -->
+    <div class="button">
+      <div class="upper-rows">
+        <div class="head-button" onclick="toggleMode()">Mode</div>
+        <div class="head-button" onclick="toggleMode()">Off/On</div>
+      </div>
+
+      <div class="upper-rows">
+        <div class="comp-operator" onclick="addToDisplay('unKnown')">comp-</div>
+        <div class="comp-operator" onclick="addToDisplay('x√y')">x√y</div>
+        <div class="comp-operator" onclick="addToDisplay('x2 || x3')">x2</div>
+        <div class="comp-operator" onclick="addToDisplay('log')">log</div>
+        <div class="comp-operator" onclick="addToDisplay('In')">In</div>
+      </div>
+
+      <div class="upper-rows">
+        <div class="comp-operator" onclick="addToDisplay('sin')">sin</div>
+        <div class="comp-operator" onclick="addToDisplay('cos')">cos</div>
+        <div class="comp-operator" onclick="addToDisplay('tan')">tan</div>
+        <div class="comp-operator" onclick="addToDisplay('10^x')">10^x</div>
+        <div class="comp-operator" onclick="addToDisplay('e^x')">e^x</div>
+      </div>
+
+      <div class="upper-rows">
+        <div class="comp-operator" onclick="addToDisplay('cosec')">cosec</div>
+        <div class="comp-operator" onclick="addToDisplay('sec')">sec</div>
+        <div class="comp-operator" onclick="addToDisplay('cot')">cot</div>
+        <div class="comp-operator" onclick="addToDisplay('logb')">logb</div>
+        <div class="comp-operator" onclick="addToDisplay('x^y')">x^y</div>
+      </div>
+
+      <div class="upper-rows">
+        <div class="comp-operator" onclick="toggleMode()">shift</div>
+        <div class="comp-operator" onclick="addToDisplay('(')">(</div>
+        <div class="comp-operator" onclick="addToDisplay(')')">)</div>
+        <div class="comp-operator" onclick="addToDisplay('abs')">abs</div>
+      </div>
+
+      <div class="row">
+        <div class="number" onclick="addToDisplay('7')">7</div>
+        <div class="number" onclick="addToDisplay('8')">8</div>
+        <div class="number" onclick="addToDisplay('9')">9</div>
+        <div class="operator" onclick="deleteLastCharacter()">DEL</div>
+        <div class="operator" onclick="clearScreen()">AC</div>
+      </div>
+      <div class="row">
+        <div class="number" onclick="addToDisplay('4')">4</div>
+        <div class="number" onclick="addToDisplay('5')">5</div>
+        <div class="number" onclick="addToDisplay('6')">6</div>
+        <div class="operator" onclick="addToDisplay('×')">×</div>
+        <div class="operator" onclick="addToDisplay('÷')">÷</div>
+      </div>
+      <div class="row">
+        <div class="number" onclick="addToDisplay('1')">1</div>
+        <div class="number" onclick="addToDisplay('2')">2</div>
+        <div class="number" onclick="addToDisplay('3')">3</div>
+        <div class="operator" onclick="addToDisplay('+')">+</div>
+        <div class="operator" onclick="addToDisplay('-')">-</div>
+      </div>
+      <div class="row">
+        <div class="number" onclick="addToDisplay('0')">0</div>
+        <div class="operator" onclick="addToDisplay('.')">.</div>
+        <div class="operator" onclick="lastOperatedExpression()">Hist</div>
+        <div class="operator" onclick="lastOperationValue()">Ans</div>
+        <div class="operator" onclick="calculate()">=</div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="static/scripts/clientToServer.js"></script>
+</body>
 </html>

@@ -1,26 +1,53 @@
-/*global style for body*/
 body {
-  background-color: #000000; /* or just black */
-  text-align: center;color: #FFFFFF; /* white */
+  background-color: #000000;
+  text-align: center;
+  color: #FFFFFF;
   font-family: Arial, sans-serif;
 }
 
-/* row style*/
-.row {
-    display: flex;
-    justify-content: center;
-  }
+.upper-rows {
+  display: flex;
+  justify-content: space-between;
+}
 
-.number, .operator {                        width: 50px;
+.head-button {
+  width: 45%; /* Adjust the width as needed */
+  background-color: #fff;
+  color: #000;
+  justify-content: space-between;
+}
+
+.comp-operator {
+  background-color: blue;
+  color: #fff;
+  width: 20%;
+  height: 25%;
+  margin: 2px;
+  border: 2px solid #CCCCCC;
+  padding: 1px;
+  text-align: center;
+  line-height: 15px;
+  user-select: none;
+  cursor: pointer;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+}
+
+.number,
+.operator {
+  width: 50px;
   height: 50px;
   margin: 5px;
   border: 2px solid #DDDDDD;
   padding: 2px;
   text-align: center;
-  line-height: 25px;
+  line-height: 20px;
   border-radius: 1px;
   user-select: none;
-  cursor: pointer; /*adds a pointer cursor    to hover over buttons*/
+  cursor: pointer;
 }
 
 .operator {
@@ -52,9 +79,6 @@ body {
   color: #FFFFFF;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  bottom: 0px;
-  left: 50%;;
-  transform: translateX(-50%);
-  padding: 0.5px;
+  position:
 }
+

@@ -1,11 +1,11 @@
-// import evalateMathExpression from './utils/elementaryMaths'
-// import Trig from './utils/elementaryMaths';
-// import { Logarithms as loga } from './utils/elementaryMaths';
+import evaluateMathExpression from './elementaryMaths';
+import Trig from './trig';
+import Logarithms from './logarithms';
 
-const { evaluateMathExpression } = require('./elementaryMaths');
+/* const { evaluateMathExpression } = require('./elementaryMaths');
 const Trig = require('./trig');
 const Logarithms = require('./logarithms');
-const loga = Logarithms;
+const loga = Logarithms;*/
 
 class complexMaths {
   static async squareX(x) {
@@ -96,12 +96,12 @@ const trigFuncs = {
 };
 
 const logFuncs = {
-  'In': loga.In,
-  'log': loga.log,
-  'logb': loga.logb,
-  'antilogIn': loga.antilogIn,
-  'antilog': loga.antilog,
-  'antilogb': loga.antilogb,
+  'In': Logarithms.In,
+  'log': Logarithms.log,
+  'logb': Logarithms.logb,
+  'antilogIn': Logarithms.antilogIn,
+  'antilog': Logarithms.antilog,
+  'antilogb': Logarithms.antilogb,
 };
 
 const powerFuncs = {
@@ -171,6 +171,7 @@ async function refineExpression(expression) {
       const operand = splitField[k];
       let operator = splitField[k + 1];
 
+      // set operor to seFlag here so we will ths expression does not include an operator
       if (!operator) {
         operator = 'setFlag';
       }
@@ -185,10 +186,11 @@ async function refineExpression(expression) {
       for (let k = 0; k < operators.length; k += 1) {
         if (operators[k] === "setFlag") {
           recursiveResult = recursiveResult;
-          console.log('In this block mutiple float arguments were passed:', recursiveResult);
+          console.log('In this block one or mutiple float arguments were passed without an operator:', recursiveResult);
         } else {
           expr += operators[k] + exprList[k + 1];
           recursiveResult = await evaluateMathExpression(expr);
+          console.log("arguments passed with operator:", recursiveResult);
         }
       }
       console.log('This is expr:', expr);
@@ -302,4 +304,6 @@ async function evaluateComplexMathExpression(expression) {
   return await evaluateMathExpression(expression);
 }
 
-module.exports = { evaluateComplexMathExpression, refineExpression };
+// module.exports = { evaluateComplexMathExpression, refineExpression };
+
+export default evaluateComplexMathExpression;

@@ -58,6 +58,35 @@ class Trig {
     angle = Trig.theta(angle);
     return 1 / Trig.tan(angle);
   }
+
+  static asin(angle) {
+    const result = Math.asin(angle);
+    console.log("This is the current Mode", this.CalcMode);
+    if (this.CalcMode === "Degree") {
+      return (result * 180) / PI;
+    } else {
+      return result;
+    }
+  }
+
+  static acos(angle) {
+    const result = Math.acos(angle);
+    if (this.CalcMode === "Degree") {
+      return (result * 180) / PI;
+    } else {
+      return Math.acos(angle);
+    }
+  }
+
+  static atan(angle) {
+    const result = Math.atan(angle);
+    if (this.CalcMode === "Degree") {
+      return (result * 180) / PI;
+    } else {
+      return result;
+    }
+  }
 }
 
-module.exports = Trig;
+// module.exports = Trig;
+export default Trig;

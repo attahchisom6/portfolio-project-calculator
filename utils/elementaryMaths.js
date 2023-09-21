@@ -71,7 +71,9 @@ async function evaluateMathExpression(expression) {
     let operators = [];
     let operands = [];
 
-    for (let term of refinedTerms) {
+    for (let i = 0; i < refinedTerms.length; i++) {
+      const term = refinedTerms[i];
+
       if (term === "(") {
         operators.push(term);
       } else if (term === ")") {
@@ -83,17 +85,27 @@ async function evaluateMathExpression(expression) {
         }
         operators.pop(); // Remove the "("
       } else if (["+", "-", "*", "/", "%"].includes(term)) {
-        while (
-          operators.length &&
-          precedence(operators[operators.length - 1]) >= precedence(term)
-        ) {
-          const operator = operators.pop();
-          const operand2 = operands.pop();
-          const operand1 = operands.pop();
-          operands.push(await applyOperator(operator, operand1, operand2));
+        // Check if the current term is a minus sign and the previous term was an operator or an opening parenthesis
+        if (term === "-" && (i === 0 || ["(", "+", "-", "*", "/", "%"].includes(refinedTerms[i - 1]))) {
+          // Handle negative number
+          const nextTerm = refinedTerms[i + 1];
+          if (!nextTerm || isNaN(parseFloat(nextTerm))) {
+            throw new Error("Invalid expression: Negative sign must be followed by a number.");
+          }
+          operands.push(-parseFloat(nextTerm));
+          i++; // Skip the next term since we handled it here
+        } else {
+          while (
+            operators.length &&
+            precedence(operators[operators.length - 1]) >= precedence(term)
+          ) {
+            const operator = operators.pop();
+            const operand2 = operands.pop();
+            const operand1 = operands.pop();
+            operands.push(await applyOperator(operator, operand1, operand2));
+          }
+          operators.push(term);
         }
-        //makes sure operations of lower precedence are handled later
-        operators.push(term);
       } else {
         operands.push(parseFloat(term));
       }
@@ -143,6 +155,6 @@ function precedence(operator) {
   }
 }
 
-module.exports = { ElemMaths, evaluateMathExpression };
+// module.exports = { ElemMaths, evaluateMathExpression };
 
-// export default evaluateMathExpression;
+export default evaluateMathExpression;
