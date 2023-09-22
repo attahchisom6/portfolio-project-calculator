@@ -54,7 +54,6 @@ function calculate() {
         console.error(error);
         inputField.value = `Division By Zero: ${error}`;
       }
-
     })
     .catch((error) => {
       console.error("Error:", error);
@@ -81,21 +80,18 @@ function lastOperationValue() {
   inputField.value = currentExpression;
 }
 
-/*function toggleMode() {
+function toggleMode() {
   const defaultt = "Rad";
   if (footerMode.textContent === defaultt) {
     footerMode.textContent = "Deg";
   } else {
     footerMode.textContent = defaultt;
   }
-}*/
-
-
-// document.querySelector('#calc-modee').addEventListener('click', toggleMode);
+}
 
 function toggleShiftMode() {
   isShiftMode = !isShiftMode;
-  footerShiftMode.textContent = "shft";
+  footerShiftMode.textContent = isShiftMode ? "shft" : "";
 
   const buttonsToModify = document.querySelectorAll('.comp-operator');
 
@@ -111,31 +107,52 @@ function toggleShiftMode() {
       case 'tan':
         button.textContent = isShiftMode ? 'atan' : 'tan';
         break;
+      case 'asin':
+        button.textContent = isShiftMode ? 'sin' : 'asin';
+        break;
+      case 'acos':
+        button.textContent = isShiftMode ? 'cos' : 'acos';
+        break;
+      case 'atan':
+        button.textContent = isShiftMode ? 'tan' : 'atan';
+        break;
+      case 'x²':
+        button.textContent = isShiftMode ? 'x³' : 'x²';
+        break;
+      case 'x³':
+        button.textContent = isShiftMode ? 'x²' : 'x³';
+        break;
       case 'log':
         button.innerHTML = isShiftMode ? '10<sup>x</sup>' : 'log';
         break;
+      case '10<sup>x</sup>':
+        button.innerHTML = isShiftMode ? 'log': '10<sup>x</sup>';
+        break;
       case 'In':
-        button.innerHTML = isShiftMode ? 'e<sup>x</sup>' : 'In';
+       button.innerHTML = isShiftMode ? 'e<sup>x</sup>' : 'In';
+        break;
+      case 'e<sup>x</sup>':
+        button.innerHTML = isShiftMode ? 'In': 'e<sup>x</sup>';
         break;
       case 'logb':
-        button.innerHTML = isShiftMode ? 'x<sup>y</sup>' : 'logb';
+       button.innerHTML = isShiftMode ? 'b<sup>y</sup>' : 'lob';
         break;
-      case 'x²':
-        button.innerHTML = isShiftMode ? 'x<sup>3</sup>' : 'x²';
+      case 'b<sup>y</sup>':
+        button.innerHTML = isShiftMode ? 'logb': 'b<sup>y</sup>';
         break;
       default:
-        isShiftMode = false;
         break;
     }
   });
 }
 
-document.querySelector('#shift-btn').addEventListener('click', toggleShiftMode());
+document.querySelector('#shift-btn').addEventListener('click', toggleShiftMode);
 
 footerShiftMode.addEventListener('click', () => {
   if (isShiftMode) {
     footerShiftMode.style.color = "pink";
   } else {
-    footerShiftMode.style.color = "orage";
+    footerShiftMode.style.color = "orange";
   }
 });
+
