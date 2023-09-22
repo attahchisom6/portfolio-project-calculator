@@ -17,20 +17,20 @@
       <div class="input-container">
         <input type="text" id="display" value="0" disabled>
         <div id="calc-mode">Rad</div>
-        <div id="shift-btn"></div>
+        <div id="shift-btn">shft</div>
       </div>
     </div>
     <!-- calculator buttons -->
     <div class="button">
       <div class="upper-rows">
         <div class="head-button" onclick="toggleMode()">Mode</div>
-        <div class="head-button" onclick="toggleMode()">Off/On</div>
+        <div class="head-button" onclick="addToDisplay('On')">Off/On</div>
       </div>
 
       <div class="upper-rows">
-        <div class="comp-operator" onclick="addToDisplay('unKnown')">comp-</div>
+        <div class="comp-operator" onclick="lastOperatedExpression()">Hist</div>
         <div class="comp-operator" onclick="addToDisplay('x√y')">x√y</div>
-        <div class="comp-operator" onclick="addToDisplay('x2 || x3')">x2</div>
+        <div class="comp-operator" onclick="addToDisplay('&sup2;')">x<sup>2</sup></div>
         <div class="comp-operator" onclick="addToDisplay('log')">log</div>
         <div class="comp-operator" onclick="addToDisplay('In')">In</div>
       </div>
@@ -39,8 +39,8 @@
         <div class="comp-operator" onclick="addToDisplay('sin')">sin</div>
         <div class="comp-operator" onclick="addToDisplay('cos')">cos</div>
         <div class="comp-operator" onclick="addToDisplay('tan')">tan</div>
-        <div class="comp-operator" onclick="addToDisplay('10^x')">10^x</div>
-        <div class="comp-operator" onclick="addToDisplay('e^x')">e^x</div>
+        <div class="comp-operator" onclick="addToDisplay('10&supx;<F11>')">10<sup>x</sup></div>
+        <div class="comp-operator" onclick="addToDisplay('e&supx;')">e<sup>x</x></div>
       </div>
 
       <div class="upper-rows">
@@ -48,11 +48,11 @@
         <div class="comp-operator" onclick="addToDisplay('sec')">sec</div>
         <div class="comp-operator" onclick="addToDisplay('cot')">cot</div>
         <div class="comp-operator" onclick="addToDisplay('logb')">logb</div>
-        <div class="comp-operator" onclick="addToDisplay('x^y')">x^y</div>
+        <div class="comp-operator" onclick="addToDisplay('x&supy;')">x<sup>y</sup></div>
       </div>
 
       <div class="upper-rows">
-        <div class="comp-operator" onclick="toggleMode()">shift</div>
+        <div class="comp-operator" onclick="toggleShiftMode()">shift</div>
         <div class="comp-operator" onclick="addToDisplay('(')">(</div>
         <div class="comp-operator" onclick="addToDisplay(')')">)</div>
         <div class="comp-operator" onclick="addToDisplay('abs')">abs</div>
@@ -82,7 +82,7 @@
       <div class="row">
         <div class="number" onclick="addToDisplay('0')">0</div>
         <div class="operator" onclick="addToDisplay('.')">.</div>
-        <div class="operator" onclick="lastOperatedExpression()">Hist</div>
+        <div class="operator" onclick="addToDisplay(',')">,</div>
         <div class="operator" onclick="lastOperationValue()">Ans</div>
         <div class="operator" onclick="calculate()">=</div>
       </div>

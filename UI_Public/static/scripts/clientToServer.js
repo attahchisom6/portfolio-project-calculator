@@ -81,21 +81,61 @@ function lastOperationValue() {
   inputField.value = currentExpression;
 }
 
-function toggleMode() {
+/*function toggleMode() {
   const defaultt = "Rad";
   if (footerMode.textContent === defaultt) {
     footerMode.textContent = "Deg";
   } else {
     footerMode.textContent = defaultt;
   }
-}
+}*/
+
+
+// document.querySelector('#calc-modee').addEventListener('click', toggleMode);
 
 function toggleShiftMode() {
   isShiftMode = !isShiftMode;
-  // Implement your logic for handling Shift mode here
-  // isShiftMode to determine the state
+  footerShiftMode.textContent = "shft";
+
+  const buttonsToModify = document.querySelectorAll('.comp-operator');
+
+  buttonsToModify.forEach((button) => {
+    const text = button.textContent;
+    switch (text) {
+      case 'sin':
+        button.textContent = isShiftMode ? 'asin' : 'sin';
+        break;
+      case 'cos':
+        button.textContent = isShiftMode ? 'acos' : 'cos';
+        break;
+      case 'tan':
+        button.textContent = isShiftMode ? 'atan' : 'tan';
+        break;
+      case 'log':
+        button.innerHTML = isShiftMode ? '10<sup>x</sup>' : 'log';
+        break;
+      case 'In':
+        button.innerHTML = isShiftMode ? 'e<sup>x</sup>' : 'In';
+        break;
+      case 'logb':
+        button.innerHTML = isShiftMode ? 'x<sup>y</sup>' : 'logb';
+        break;
+      case 'x²':
+        button.innerHTML = isShiftMode ? 'x<sup>3</sup>' : 'x²';
+        break;
+      default:
+        isShiftMode = false;
+        break;
+    }
+  });
 }
 
-// event listeners for your upper-row buttons
-document.querySelector('.head-button:nth-child(1)').addEventListener('click', toggleMode);
-document.querySelector('.head-button:nth-child(2)').addEventListener('click', toggleShiftMode);
+document.querySelector('#shift-btn').addEventListener('click', toggleShiftMode());
+
+footerShiftMode.addEventListener('click', () => {
+  if (isShiftMode) {
+    footerShiftMode.style.color = "pink";
+  } else {
+    footerShiftMode.style.color = "orage";
+  }
+});

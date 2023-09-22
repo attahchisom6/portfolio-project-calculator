@@ -1,8 +1,16 @@
+/* reset some sefault style to ensure consistent rendering among browser*/
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
 body {
   background-color: #000000;
   text-align: center;
   color: #FFFFFF;
   font-family: Arial, sans-serif;
+  overflow: hidden; /*prevent scrolling*/
 }
 
 .upper-rows {
@@ -11,20 +19,24 @@ body {
 }
 
 .head-button {
-  width: 45%; /* Adjust the width as needed */
+  width: 20%;
+ /* height: 20px;*/
+  border-radius: 50px;
   background-color: #fff;
   color: #000;
   justify-content: space-between;
+  margin-bottom: 5px;
 }
 
 .comp-operator {
   background-color: blue;
   color: #fff;
   width: 20%;
-  height: 25%;
-  margin: 2px;
+  height: 15%;
+  margin: 3px;
   border: 2px solid #CCCCCC;
-  padding: 1px;
+  border-radius: 5px;
+  padding: 3px;
   text-align: center;
   line-height: 15px;
   user-select: none;
@@ -33,6 +45,7 @@ body {
 
 .row {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
 }
 
@@ -70,15 +83,29 @@ body {
 #display {
   width: 100%;
   height: 10vh;
+  padding-left: 3px;
   background-color: black;
   color: green;
 }
 
-#calc-mode {
+#calc-mode, #shift-btn {
   background-color: #777777;
-  color: #FFFFFF;
+  display: flex;
   justify-content: center;
   align-items: center;
-  position:
 }
 
+#calc-mode {
+  color: #FFFFFF;
+}
+
+#shift-btn {
+  color: orange;
+}
+
+/*Make the row button responsive*/
+@media (max-width: 768px) {
+  .number, .operator {
+    width: 50px;
+  }
+}
