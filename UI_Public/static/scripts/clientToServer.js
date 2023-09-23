@@ -91,12 +91,12 @@ function toggleMode() {
 
 function toggleShiftMode() {
   isShiftMode = !isShiftMode;
-  footerShiftMode.textContent = isShiftMode ? "shft" : "";
 
   const buttonsToModify = document.querySelectorAll('.comp-operator');
 
   buttonsToModify.forEach((button) => {
     const text = button.textContent;
+    const html = button.innerHTML;
     switch (text) {
       case 'sin':
         button.textContent = isShiftMode ? 'asin' : 'sin';
@@ -116,11 +116,15 @@ function toggleShiftMode() {
       case 'atan':
         button.textContent = isShiftMode ? 'tan' : 'atan';
         break;
-      case 'x²':
-        button.textContent = isShiftMode ? 'x³' : 'x²';
+      default:
         break;
-      case 'x³':
-        button.textContent = isShiftMode ? 'x²' : 'x³';
+    }
+    switch (html) {
+      case 'x<sup>2</sup>':
+        button.innerHTML = isShiftMode ? 'x<sup>3</sup>': 'x<sup>2</sup>';
+        break;
+      case 'x<sup>3</sup>':
+        button.innerHTML = isShiftMode ? 'x<sup>2</sup>' : 'x<up>3</sup>';
         break;
       case 'log':
         button.innerHTML = isShiftMode ? '10<sup>x</sup>' : 'log';
@@ -129,16 +133,20 @@ function toggleShiftMode() {
         button.innerHTML = isShiftMode ? 'log': '10<sup>x</sup>';
         break;
       case 'In':
-       button.innerHTML = isShiftMode ? 'e<sup>x</sup>' : 'In';
+        button.innerHTML = isShiftMode ? 'e<sup>x</sup>' : 'In';
         break;
       case 'e<sup>x</sup>':
         button.innerHTML = isShiftMode ? 'In': 'e<sup>x</sup>';
         break;
       case 'logb':
-       button.innerHTML = isShiftMode ? 'b<sup>y</sup>' : 'lob';
+        button.innerHTML = isShiftMode ? 'b<sup>y</sup>' : 'logb';
         break;
       case 'b<sup>y</sup>':
         button.innerHTML = isShiftMode ? 'logb': 'b<sup>y</sup>';
+        button.addEventListener('click', () => {
+          currentExpression = button.innerHTML;
+          inputField = currentExpression;
+        });
         break;
       default:
         break;
@@ -150,7 +158,7 @@ document.querySelector('#shift-btn').addEventListener('click', toggleShiftMode);
 
 footerShiftMode.addEventListener('click', () => {
   if (isShiftMode) {
-    footerShiftMode.style.color = "pink";
+    footerShiftMode.style.color = "purple";
   } else {
     footerShiftMode.style.color = "orange";
   }
