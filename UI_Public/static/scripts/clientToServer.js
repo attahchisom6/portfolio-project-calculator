@@ -89,18 +89,17 @@ function toggleMode() {
   }
 }
 
-function toggleShiftMode() {
-  isShiftMode = !isShiftMode;
+// Your existing code...
 
+function toggleShiftMode() {
   const buttonsToModify = document.querySelectorAll('.comp-operator');
 
   buttonsToModify.forEach((button) => {
-    // const text = button.textContent;
     const html = button.innerHTML;
 
     const defaultButtonsLabel = {
       'sin': 'asin',
-      'cos': 'acos' : 'cos',
+      'cos': 'acos',
       'tan': 'atan',
       'x<sup>2</sup>': 'x<sup>3</sup>',
       'log': '10<sup>x</sup>',
@@ -117,21 +116,21 @@ function toggleShiftMode() {
       'e<sup>x</sup>': 'In',
       'b<sup>y</sup>': 'logb',
     }
-    
+
     if (defaultButtonsLabel.hasOwnProperty(html)) {
       button.innerHTML = defaultButtonsLabel[html];
-      footerShiftMode.textContent = 'shft';
     } else if (customButtonsLabel.hasOwnProperty(html)) {
-      button,innerHTML = customButtonsLabel[html];
-      footerShiftMode.textContent = "";
-    } else {
-      button.innerHTML = html;
+      button.innerHTML = customButtonsLabel[html];
     }
   });
+
+  // Set the footerShiftMode text based on isShiftMode
+  footerShiftMode.textContent = isShiftMode ? 'shft' : '';
 }
 
+// Add an event listener to the shift button
 document.querySelector('#shift-btn').addEventListener('click', toggleShiftMode);
 
-footerShiftMode.innerHTML = isShiftMode ? 'shift' : "";
+// Set footerShiftMode text and color initially based on isShiftMode
+// footerShiftMode.textContent = isShiftMode ? 'shft' : '';
 footerShiftMode.style.color = isShiftMode ? 'purple' : 'orange';
-
