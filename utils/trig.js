@@ -29,6 +29,18 @@ class Trig {
     return angle;
   }
 
+  static arcTheta(angle) {
+    switch (this.CalcMode) {
+      case 'Degree':
+        angle = (180 * angle) / Math.PI;
+        break;
+      default:
+        angle = angle;
+        break;
+    }
+    return angle;
+  }
+
   static sine(angle) {
     angle = Trig.theta(angle);
     return Math.sin(angle);
@@ -60,33 +72,20 @@ class Trig {
   }
 
   static asin(angle) {
-    const result = Math.asin(angle);
-    console.log("This is the current Mode", this.CalcMode);
-    if (this.CalcMode === "Degree") {
-      return (result * 180) / PI;
-    } else {
-      return result;
-    }
+    angle = Math.asin(angle);
+    return Trig.arcTheta(angle);
   }
 
   static acos(angle) {
-    const result = Math.acos(angle);
-    if (this.CalcMode === "Degree") {
-      return (result * 180) / PI;
-    } else {
-      return Math.acos(angle);
-    }
+    angle = Math.acos(angle);
+    return Trig.arcTheta(angle);
   }
 
   static atan(angle) {
-    const result = Math.atan(angle);
-    if (this.CalcMode === "Degree") {
-      return (result * 180) / PI;
-    } else {
-      return result;
-    }
+    angle = atan(angle);
+    return Trig.arcTheta(angle);
   }
 }
 
-// module.exports = Trig;
-export default Trig;
+module.exports = Trig;
+// export default Trig;
