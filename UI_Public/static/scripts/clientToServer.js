@@ -95,72 +95,43 @@ function toggleShiftMode() {
   const buttonsToModify = document.querySelectorAll('.comp-operator');
 
   buttonsToModify.forEach((button) => {
-    const text = button.textContent;
+    // const text = button.textContent;
     const html = button.innerHTML;
-    switch (text) {
-      case 'sin':
-        button.textContent = isShiftMode ? 'asin' : 'sin';
-        break;
-      case 'cos':
-        button.textContent = isShiftMode ? 'acos' : 'cos';
-        break;
-      case 'tan':
-        button.textContent = isShiftMode ? 'atan' : 'tan';
-        break;
-      case 'asin':
-        button.textContent = isShiftMode ? 'sin' : 'asin';
-        break;
-      case 'acos':
-        button.textContent = isShiftMode ? 'cos' : 'acos';
-        break;
-      case 'atan':
-        button.textContent = isShiftMode ? 'tan' : 'atan';
-        break;
-      default:
-        break;
+
+    const defaultButtonsLabel = {
+      'sin': 'asin',
+      'cos': 'acos' : 'cos',
+      'tan': 'atan',
+      'x<sup>2</sup>': 'x<sup>3</sup>',
+      'log': '10<sup>x</sup>',
+      'In': 'e<sup>x</sup>',
+      'logb': 'b<sup>y</sup>',
+    };
+
+    const customButtonsLabel = {
+      'asin': 'sin',
+      'acos': 'cos',
+      'atan': 'tan',
+      'x<sup>3</sup>': 'x<sup>2</sup>',
+      '10<sup>x</sup>': 'log',
+      'e<sup>x</sup>': 'In',
+      'b<sup>y</sup>': 'logb',
     }
-    switch (html) {
-      case 'x<sup>2</sup>':
-        button.innerHTML = isShiftMode ? 'x<sup>3</sup>': 'x<sup>2</sup>';
-        break;
-      case 'x<sup>3</sup>':
-        button.innerHTML = isShiftMode ? 'x<sup>2</sup>' : 'x<up>3</sup>';
-        break;
-      case 'log':
-        button.innerHTML = isShiftMode ? '10<sup>x</sup>' : 'log';
-        break;
-      case '10<sup>x</sup>':
-        button.innerHTML = isShiftMode ? 'log': '10<sup>x</sup>';
-        break;
-      case 'In':
-        button.innerHTML = isShiftMode ? 'e<sup>x</sup>' : 'In';
-        break;
-      case 'e<sup>x</sup>':
-        button.innerHTML = isShiftMode ? 'In': 'e<sup>x</sup>';
-        break;
-      case 'logb':
-        button.innerHTML = isShiftMode ? 'b<sup>y</sup>' : 'logb';
-        break;
-      case 'b<sup>y</sup>':
-        button.innerHTML = isShiftMode ? 'logb': 'b<sup>y</sup>';
-        button.addEventListener('click', () => {
-          currentExpression = button.innerHTML;
-          inputField = currentExpression;
-        });
-        break;
-      default:
-        break;
+    
+    if (defaultButtonsLabel.hasOwnProperty(html)) {
+      button.innerHTML = defaultButtonsLabel[html];
+      footerShiftMode.textContent = 'shft';
+    } else if (customButtonsLabel.hasOwnProperty(html)) {
+      button,innerHTML = customButtonsLabel[html];
+      footerShiftMode.textContent = "";
+    } else {
+      button.innerHTML = html;
     }
   });
 }
 
 document.querySelector('#shift-btn').addEventListener('click', toggleShiftMode);
 
-footerShiftMode.addEventListener('click', () => {
-  if (isShiftMode) {
-    footerShiftMode.style.color = "purple";
-  } else {
-    footerShiftMode.style.color = "orange";
-  }
-});
+footerShiftMode.innerHTML = isShiftMode ? 'shift' : "";
+footerShiftMode.style.color = isShiftMode ? 'purple' : 'orange';
 
