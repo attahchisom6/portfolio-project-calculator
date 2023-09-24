@@ -5,7 +5,8 @@ let currentExpression = '';
 let displayedExpression = '';
 let lastStackedExpression = '';
 let lastStackedValue = '';
-let isShiftMode = false;
+const shiftButtons = [];
+isShiftMode = false;
 
 function addToDisplay(value) {
   let backendValue = value;
@@ -14,6 +15,11 @@ function addToDisplay(value) {
     backendValue = "/";
   } else if (value === "×") {
     backendValue = "*";
+  } else if (value[0] === "√") {
+    // // const args = value.slice(1).split(' ')[0];
+    backendValue = 'squareRootX';
+  } else if (isShiftMode) {
+    backendValue = getShiftedValue(value);
   }
 
   currentExpression += backendValue;
@@ -117,20 +123,27 @@ function toggleShiftMode() {
       'b<sup>y</sup>': 'logb',
     }
 
+    const styles = {
+      color: "white",
+      backgroundColor: "#0F52BA",
+    }
+
     if (defaultButtonsLabel.hasOwnProperty(html)) {
       button.innerHTML = defaultButtonsLabel[html];
+      Object.assign(button.style, styles);
+      footerShiftMode.textContent = "shift";
+      isShiftMode = true;
     } else if (customButtonsLabel.hasOwnProperty(html)) {
       button.innerHTML = customButtonsLabel[html];
+      button.style.backgroundColor = "";
+      footerShiftMode.textContent = "";
+      isShifMode = true;
     }
+    isShiftMode = false;
   });
-
-  // Set the footerShiftMode text based on isShiftMode
-  footerShiftMode.textContent = isShiftMode ? 'shft' : '';
 }
 
 // Add an event listener to the shift button
 document.querySelector('#shift-btn').addEventListener('click', toggleShiftMode);
 
-// Set footerShiftMode text and color initially based on isShiftMode
-// footerShiftMode.textContent = isShiftMode ? 'shft' : '';
-footerShiftMode.style.color = isShiftMode ? 'purple' : 'orange';
+function getShiftedVakue(value) {

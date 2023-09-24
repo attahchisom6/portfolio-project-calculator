@@ -16,8 +16,10 @@
     <div class="display">
       <div class="input-container">
         <input type="text" id="display" value="0" disabled>
-        <div id="calc-mode">Rad</div>
-        <div id="shift-btn"></div>
+        <div class="shift-calc">
+          <div id="calc-mode">Rad</div>
+          <div id="shift-btn"></div>
+        </div>
       </div>
     </div>
     <!-- calculator buttons -->
@@ -29,7 +31,7 @@
 
       <div class="upper-rows">
         <div class="comp-operator" onclick="lastOperatedExpression()">Hist</div>
-        <div class="comp-operator" onclick="addToDisplay('x√y')">x√y</div>
+        <div class="comp-operator" onclick="addToDisplay('√')">√</div>
         <div class="comp-operator" onclick="addToDisplay('&sup2;')">x<sup>2</sup></div>
         <div class="comp-operator" onclick="addToDisplay('log')">log</div>
         <div class="comp-operator" onclick="addToDisplay('In')">In</div>

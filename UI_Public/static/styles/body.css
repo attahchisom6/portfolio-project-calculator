@@ -29,7 +29,7 @@ body {
 }
 
 .comp-operator {
-  background-color: blue;
+  background-color: #000080;
   color: #fff;
   width: 20%;
   height: 15%;
@@ -83,23 +83,30 @@ body {
 #display {
   width: 100%;
   height: 10vh;
-  padding-left: 3px;
+  padding-left: 5px;
   background-color: black;
-  color: green;
+  justify-content: space-between;
+  color: #00FF00;
 }
 
-#calc-mode, #shift-btn {
+.shift-calc {
   background-color: #777777;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
 }
 
+/*#shift-btn, #calc-mode {
+  justify-content: center;
+  align-items: center;
+}*/
+
 #calc-mode {
+  padding-left: 50%;
   color: #FFFFFF;
 }
 
 #shift-btn {
+  padding-right: 5px;
   color: orange;
 }
 
