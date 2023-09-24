@@ -133,8 +133,8 @@ function toggleShiftMode() {
       footerShiftMode.textContent = "shift";
       return {
         button: button,
-        originalButtonLabel: html,
-        shiftedButtonLabel: defaultButtonsLabel[html],
+        originalLabel: html,
+        shiftedLabel: defaultButtonsLabel[html],
         isShifted: true;
       }
     } else if (customButtonsLabel.hasOwnProperty(html)) {
@@ -143,15 +143,15 @@ function toggleShiftMode() {
       footerShiftMode.textContent = "";
       return {
         button: button,
-        originalButtonLabel: html,
-        shiftedButtonLabel: customButtonsLabel[html],
+        originalLabel: html,
+        shiftedLabel: customButtonsLabel[html],
         isShifted: true,
       }
     }
     return {
       button: button,
-      originalButtonsLabel; html,
-      shiftedButtonsLabel: html,
+      originalLabel; html,
+      isshiftedLabel: html,
       isShifted: false,
     }
   });
