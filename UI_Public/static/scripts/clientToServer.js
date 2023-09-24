@@ -5,8 +5,7 @@ let currentExpression = '';
 let displayedExpression = '';
 let lastStackedExpression = '';
 let lastStackedValue = '';
-const shiftButtons = [];
-isShiftMode = false;
+let isShifted = false;
 
 function addToDisplay(value) {
   let backendValue = value;
@@ -18,9 +17,10 @@ function addToDisplay(value) {
   } else if (value[0] === "√") {
     // // const args = value.slice(1).split(' ')[0];
     backendValue = 'squareRootX';
-  } else if (isShiftMode) {
+  } /*else if (isShiftMode) {
     backendValue = getShiftedValue(value);
-  }
+    console.log(backendValue);
+  }*/
 
   currentExpression += backendValue;
   displayedExpression += value;
@@ -100,50 +100,63 @@ function toggleMode() {
 function toggleShiftMode() {
   const buttonsToModify = document.querySelectorAll('.comp-operator');
 
-  buttonsToModify.forEach((button) => {
-    const html = button.innerHTML;
+  const defaultButtonsLabel = {
+    'sin': 'asin',
+    'cos': 'acos',
+    'tan': 'atan',
+    'x<sup>2</sup>': 'x<sup>3</sup>',
+    'log': '10<sup>x</sup>',
+    'In': 'e<sup>x</sup>',
+    'logb': 'b<sup>y</sup>',
+  };
 
-    const defaultButtonsLabel = {
-      'sin': 'asin',
-      'cos': 'acos',
-      'tan': 'atan',
-      'x<sup>2</sup>': 'x<sup>3</sup>',
-      'log': '10<sup>x</sup>',
-      'In': 'e<sup>x</sup>',
-      'logb': 'b<sup>y</sup>',
-    };
+  const customButtonsLabel = {
+    'asin': 'sin',
+    'acos': 'cos',
+    'atan': 'tan',
+    'x<sup>3</sup>': 'x<sup>2</sup>',
+    '10<sup>x</sup>': 'log',
+    'e<sup>x</sup>': 'In',
+    'b<sup>y</sup>': 'logb',
+  }
 
-    const customButtonsLabel = {
-      'asin': 'sin',
-      'acos': 'cos',
-      'atan': 'tan',
-      'x<sup>3</sup>': 'x<sup>2</sup>',
-      '10<sup>x</sup>': 'log',
-      'e<sup>x</sup>': 'In',
-      'b<sup>y</sup>': 'logb',
-    }
+  const styles = {
+    color: "white",
+    backgroundColor: "#0F52BA",
+   }
 
-    const styles = {
-      color: "white",
-      backgroundColor: "#0F52BA",
-    }
-
+  const shiftedButtons = Array.from(modifyButtons).map((button) {
+    const hmtl = button.innerHTML;
     if (defaultButtonsLabel.hasOwnProperty(html)) {
       button.innerHTML = defaultButtonsLabel[html];
       Object.assign(button.style, styles);
       footerShiftMode.textContent = "shift";
-      isShiftMode = true;
+      return {
+        button: button,
+        originalButtonLabel: html,
+        shiftedButtonLabel: defaultButtonsLabel[html],
+        isShifted: true;
+      }
     } else if (customButtonsLabel.hasOwnProperty(html)) {
       button.innerHTML = customButtonsLabel[html];
       button.style.backgroundColor = "";
       footerShiftMode.textContent = "";
-      isShifMode = true;
+      return {
+        button: button,
+        originalButtonLabel: html,
+        shiftedButtonLabel: customButtonsLabel[html],
+        isShifted: true,
+      }
     }
-    isShiftMode = false;
+    return {
+      button: button,
+      originalButtonsLabel; html,
+      shiftedButtonsLabel: html,
+      isShifted: false,
+    }
   });
+  return shiftedButtons;
 }
 
 // Add an event listener to the shift button
 document.querySelector('#shift-btn').addEventListener('click', toggleShiftMode);
-
-function getShiftedVakue(value) {
