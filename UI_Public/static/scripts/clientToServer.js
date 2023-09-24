@@ -94,7 +94,7 @@ function toggleMode() {
 
 function toggleShiftMode() {
   const buttonsToModify = document.querySelectorAll('.comp-operator');
-  const shiftedButton= [];
+  const shiftedButtons = [];
 
   const defaultButtonsLabel = {
     'sin': 'asin',
@@ -145,7 +145,7 @@ function toggleShiftMode() {
 
       button.removeEventListener('click');
       button.addEventListener('click', () => {
-        addToDisplay(buttonLabel);
+        addToDisplay(shiftedLabel);
       });
     }
 
