@@ -5,7 +5,7 @@ let currentExpression = '';
 let displayedExpression = '';
 let lastStackedExpression = '';
 let lastStackedValue = '';
-let isShifted = false;
+let isShiftedMode = false;
 
 function addToDisplay(value) {
   let backendValue = value;
@@ -15,16 +15,15 @@ function addToDisplay(value) {
   } else if (value === "×") {
     backendValue = "*";
   } else if (value[0] === "√") {
-    // // const args = value.slice(1).split(' ')[0];
     backendValue = 'squareRootX';
-  } /*else if (isShiftMode) {
-    backendValue = getShiftedValue(value);
-    console.log(backendValue);
-  }*/
+  }
 
-  currentExpression += backendValue;
-  displayedExpression += value;
-  inputField.value = displayedExpression;
+  const lastChars = currentExpression.slice(-value.length);
+  if (lastChars !== value) {
+    currentExpression += backendValue;
+    displayedExpression += value;
+    inputField.value = displayedExpression;
+  }
 }
 
 function deleteLastCharacter() {
@@ -42,7 +41,6 @@ function clearScreen() {
 function calculate() {
   const mode = footerMode.textContent;
   lastStackedExpression = currentExpression;
-  console.log(lastStackedExpression);
   const expression = encodeURIComponent(currentExpression);
 
   const headers = {
@@ -95,8 +93,6 @@ function toggleMode() {
   }
 }
 
-// Your existing code...
-
 function toggleShiftMode() {
   const buttonsToModify = document.querySelectorAll('.comp-operator');
 
@@ -118,45 +114,46 @@ function toggleShiftMode() {
     '10<sup>x</sup>': 'log',
     'e<sup>x</sup>': 'In',
     'b<sup>y</sup>': 'logb',
-  }
+  };
 
   const styles = {
     color: "white",
     backgroundColor: "#0F52BA",
-   }
+  };
 
-  const shiftedButtons = Array.from(modifyButtons).map((button) {
-    const hmtl = button.innerHTML;
+  const shiftedButtons = Array.from(buttonsToModify).map((button) => {
+    const html = button.innerHTML;
+    let originalLabel, shiftedLabel;
+
     if (defaultButtonsLabel.hasOwnProperty(html)) {
-      button.innerHTML = defaultButtonsLabel[html];
+      originalLabel = html;
+      shiftedLabel = defaultButtonsLabel[html];
+      button.innerHTML = shiftedLabel;
       Object.assign(button.style, styles);
       footerShiftMode.textContent = "shift";
-      return {
-        button: button,
-        originalLabel: html,
-        shiftedLabel: defaultButtonsLabel[html],
-        isShifted: true;
-      }
     } else if (customButtonsLabel.hasOwnProperty(html)) {
-      button.innerHTML = customButtonsLabel[html];
+      originalLabel = html;
+      shiftedLabel = customButtonsLabel[html];
+      button.innerHTML = shiftedLabel;
       button.style.backgroundColor = "";
       footerShiftMode.textContent = "";
-      return {
-        button: button,
-        originalLabel: html,
-        shiftedLabel: customButtonsLabel[html],
-        isShifted: true,
-      }
     }
+
+    button.addEventListener('click', () => {
+      if (isShiftedMode) {
+        addToDisplay(originalLabel);
+      } else {
+        addToDisplay(shiftedLabel);
+      }
+      isShiftedMode = !isShiftedMode;
+    });
+
     return {
       button: button,
-      originalLabel; html,
-      isshiftedLabel: html,
-      isShifted: false,
-    }
+      /*originalLabel: originalLabel,*/
+      shiftedLabel: shiftedLabel,
+      isShiftedMode: shiftedLabel !== html,
+    };
   });
   return shiftedButtons;
 }
-
-// Add an event listener to the shift button
-document.querySelector('#shift-btn').addEventListener('click', toggleShiftMode);
