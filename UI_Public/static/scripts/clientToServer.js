@@ -5,7 +5,6 @@ let currentExpression = '';
 let displayedExpression = '';
 let lastStackedExpression = '';
 let lastStackedValue = '';
-let isShiftedMode = false;
 
 function addToDisplay(value) {
   let backendValue = value;
@@ -61,7 +60,7 @@ function calculate() {
     })
     .catch((error) => {
       console.error("Error:", error);
-      throw Error("Division By Zero:", error);
+      throw Error(`Division By Zero: ${error}`);
     });
   clearScreen();
 }
@@ -95,6 +94,7 @@ function toggleMode() {
 
 function toggleShiftMode() {
   const buttonsToModify = document.querySelectorAll('.comp-operator');
+  const shiftedButton= [];
 
   const defaultButtonsLabel = {
     'sin': 'asin',
@@ -121,7 +121,7 @@ function toggleShiftMode() {
     backgroundColor: "#0F52BA",
   };
 
-  const shiftedButtons = Array.from(buttonsToModify).map((button) => {
+  buttonsToModify.forEach((button) => {
     const html = button.innerHTML;
     let originalLabel, shiftedLabel;
 
@@ -131,29 +131,29 @@ function toggleShiftMode() {
       button.innerHTML = shiftedLabel;
       Object.assign(button.style, styles);
       footerShiftMode.textContent = "shift";
+
+      button.addEventListener('click', () => {
+        addToDisplay(shiftedLabel);
+      });
+
     } else if (customButtonsLabel.hasOwnProperty(html)) {
       originalLabel = html;
       shiftedLabel = customButtonsLabel[html];
       button.innerHTML = shiftedLabel;
       button.style.backgroundColor = "";
       footerShiftMode.textContent = "";
+
+      button.removeEventListener('click');
+      button.addEventListener('click', () => {
+        addToDisplay(buttonLabel);
+      });
     }
 
-    button.addEventListener('click', () => {
-      if (isShiftedMode) {
-        addToDisplay(originalLabel);
-      } else {
-        addToDisplay(shiftedLabel);
-      }
-      isShiftedMode = !isShiftedMode;
-    });
-
-    return {
+    shiftedButtons.push({
       button: button,
-      /*originalLabel: originalLabel,*/
+      originalLabel: originalLabel,
       shiftedLabel: shiftedLabel,
-      isShiftedMode: shiftedLabel !== html,
-    };
+    });
   });
   return shiftedButtons;
 }
