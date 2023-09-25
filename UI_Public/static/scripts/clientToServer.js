@@ -17,12 +17,9 @@ function addToDisplay(value) {
     backendValue = 'squareRootX';
   }
 
-  const lastChars = currentExpression.slice(-value.length);
-  if (lastChars !== value) {
-    currentExpression += backendValue;
-    displayedExpression += value;
-    inputField.value = displayedExpression;
-  }
+  currentExpression += backendValue;
+  displayedExpression += value;
+  inputField.value = displayedExpression;
 }
 
 function deleteLastCharacter() {
@@ -100,7 +97,8 @@ function toggleShiftMode() {
     'sin': 'asin',
     'cos': 'acos',
     'tan': 'atan',
-    'x<sup>2</sup>': 'x<sup>3</sup>',
+    'x<sup>2</sup>': '√',
+    'x<sup>3</sup>': '<span class="sqrt3">3</span>√',
     'log': '10<sup>x</sup>',
     'In': 'e<sup>x</sup>',
     'logb': 'b<sup>y</sup>',
@@ -110,7 +108,8 @@ function toggleShiftMode() {
     'asin': 'sin',
     'acos': 'cos',
     'atan': 'tan',
-    'x<sup>3</sup>': 'x<sup>2</sup>',
+    '√': 'x<sup>2</sup>',
+    '<span class="sqrt3">3</span>√': 'x<sup>3</sup>', // Use a class to style the '3'
     '10<sup>x</sup>': 'log',
     'e<sup>x</sup>': 'In',
     'b<sup>y</sup>': 'logb',
@@ -133,7 +132,14 @@ function toggleShiftMode() {
       footerShiftMode.textContent = "shift";
 
       button.addEventListener('click', () => {
-        addToDisplay(shiftedLabel);
+        const index = currentExpression.lastIndexOf(originalLabel);
+        if (index >= 0) {
+          currentExpression = currentExpression.slice(0, index) + shiftedLabel + currentExpression.slice(index + originalLabel.length);
+        } else {
+          currentExpression += shiftLabel;
+        }
+        displayExpression = currentExpression;
+        inputField.value = currentExpression;
       });
 
     } else if (customButtonsLabel.hasOwnProperty(html)) {
@@ -143,9 +149,15 @@ function toggleShiftMode() {
       button.style.backgroundColor = "";
       footerShiftMode.textContent = "";
 
-      button.removeEventListener('click');
+      // button.removeEventListener('click');
       button.addEventListener('click', () => {
-        addToDisplay(shiftedLabel);
+        const index = currentExpression.lastIndexOf(originalLabel);
+        if (index >= 0) {
+          currentExpression = currentExpression.slice(0, index) + shiftedLabel + currentExpression.slice(index + originalLabel.length);
+        } else {
+          currentExpression += shiftedLabel;
+        };
+        inputField.value = currentExpression;
       });
     }
 
@@ -157,3 +169,21 @@ function toggleShiftMode() {
   });
   return shiftedButtons;
 }
+
+function handleOperationWithoutOperator(value) {
+  const funcs = [ 'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'cosec', 'sec', 'cot' ];
+  let parsedExpression = '';
+
+  for (const item of funcs) {
+    let L;
+    if (value.substring(item)) {<F11>
+      const L = value.split(item);
+      if (!L[1].substring('(')) {
+        L[1] = '(' + L[1] + ')';
+      }
+      parsedExpression += L[0] + '*' + item + l[1];
+    }
+  }
+  return parsedExpression;
+}
+      

@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="static/styles/header.css">
   <link rel="stylesheet" href="static/styles/body.css">
   <link rel="stylesheet" href="static/styles/footer.css">
+  <link rel="stylesheet" href="static/styles/config.css">
 </head>
 <body>
   <header>The God of Moses is Great!</header>
@@ -31,8 +32,8 @@
 
       <div class="upper-rows">
         <div class="comp-operator" onclick="lastOperatedExpression()">Hist</div>
-        <div class="comp-operator" onclick="addToDisplay('√')">√</div>
         <div class="comp-operator" onclick="addToDisplay('&sup2;')">x<sup>2</sup></div>
+        <div class="comp-operator" onclick="addToDisplay('&sup3;')">x<sup>3</sup></div>
         <div class="comp-operator" onclick="addToDisplay('log')">log</div>
         <div class="comp-operator" onclick="addToDisplay('In')">In</div>
       </div>
@@ -83,8 +84,8 @@
       </div>
       <div class="row">
         <div class="number" onclick="addToDisplay('0')">0</div>
-        <div class="operator" onclick="addToDisplay('.')">.</div>
         <div class="operator" onclick="addToDisplay(',')">,</div>
+        <div class="operator" onclick="addToDisplay('.')">.</div>
         <div class="operator" onclick="lastOperationValue()">Ans</div>
         <div class="operator" onclick="calculate()">=</div>
       </div>

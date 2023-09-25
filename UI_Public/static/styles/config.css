@@ -1,0 +1,5 @@
+.sqrt3 {
+  font-size: 0.7em; /* Adjust the font size to make it smaller */
+  vertical-align: top; /* Align the '3' at the top */
+  margin-right: 0.1em; /* Adjust the spacing between '3' and the square-root symbol */
+}
