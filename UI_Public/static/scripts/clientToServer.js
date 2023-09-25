@@ -176,14 +176,26 @@ function handleOperationWithoutOperator(value) {
 
   for (const item of funcs) {
     let L;
-    if (value.substring(item)) {<F11>
-      const L = value.split(item);
-      if (!L[1].substring('(')) {
-        L[1] = '(' + L[1] + ')';
-      }
-      parsedExpression += L[0] + '*' + item + l[1];
+    if (value.substring(item)) {
+      if (value.lastIndexOf(item) === 0) { 
+        L = value.split(item);
+        if (!L[1].match(/\(([^)])\)/) {
+          L[1] = '(' + L[1] + ')';
+        } else { 
+          L[1] = L[1];
+        }
+        parsedExpression = L[0] + L[1];
+      } else if (value.lastIndexOf(item) > 0) {
+        L = value.split(item);
+        if (value.match(/\(([[^])\))) {
+          L[1] = '(' + l[1] + ')';
+        } else {
+          L[1] = L[1];
+        }
+        parsedExpression = L[0] + '*' + item + L[1];
+      } 
     }
+    parsedE expression = value;
   }
   return parsedExpression;
 }
-      
