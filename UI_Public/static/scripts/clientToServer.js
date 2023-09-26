@@ -97,22 +97,22 @@ function toggleShiftMode() {
     'sin': 'asin',
     'cos': 'acos',
     'tan': 'atan',
-    'x<sup>2</sup>': '√',
-    'x<sup>3</sup>': '<span class="sqrt3">3</span>√',
-    'log': '10<sup>x</sup>',
-    'In': 'e<sup>x</sup>',
-    'logb': 'b<sup>y</sup>',
+    'sq': 'sqrt',
+    'cb': 'cbrt',
+    'log': '10^',
+    'In': 'e^',
+    'logb': 'b^',
   };
 
   const customButtonsLabel = {
     'asin': 'sin',
     'acos': 'cos',
     'atan': 'tan',
-    '√': 'x<sup>2</sup>',
-    '<span class="sqrt3">3</span>√': 'x<sup>3</sup>', // Use a class to style the '3'
-    '10<sup>x</sup>': 'log',
-    'e<sup>x</sup>': 'In',
-    'b<sup>y</sup>': 'logb',
+    'sqrt': 'sq',
+    'cbrt': 'cb',
+    '10^': 'log',
+    'e^': 'In',
+    'b^': 'logb',
   };
 
   const styles = {
@@ -138,7 +138,6 @@ function toggleShiftMode() {
         } else {
           currentExpression += shiftLabel;
         }
-        displayExpression = currentExpression;
         inputField.value = currentExpression;
       });
 
@@ -170,32 +169,37 @@ function toggleShiftMode() {
   return shiftedButtons;
 }
 
-function handleOperationWithoutOperator(value) {
-  const funcs = [ 'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'cosec', 'sec', 'cot' ];
+/*function handleOperationWithoutOperator(value) {
+  const funcs = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'sec', 'cot'];
   let parsedExpression = '';
 
   for (const item of funcs) {
-    let L;
-    if (value.substring(item)) {
-      if (value.lastIndexOf(item) === 0) { 
-        L = value.split(item);
-        if (!L[1].match(/\(([^)])\)/) {
+    if (value.includes(item)) {
+      if (value.lastIndexOf(item) === 0) {
+        let L = value.split(item);
+        L[1] = L[1].trim();
+        if (!L[1].match(/\(.+\)/)) {
           L[1] = '(' + L[1] + ')';
-        } else { 
-          L[1] = L[1];
         }
-        parsedExpression = L[0] + L[1];
+        parsedExpression = item + L[1];
       } else if (value.lastIndexOf(item) > 0) {
-        L = value.split(item);
-        if (value.match(/\(([[^])\))) {
-          L[1] = '(' + l[1] + ')';
-        } else {
-          L[1] = L[1];
+        let L = value.split(item);
+        L[1] = L[1].trim();
+        if (!L[1].match(/\(.+\)/)) {
+          L[1] = '(' + L[1] + ')';
         }
         parsedExpression = L[0] + '*' + item + L[1];
-      } 
+      } else {
+        parsedExpression = value;
+      }
+    } else {
+      parsedExpression = value;
     }
-    parsedE expression = value;
   }
   return parsedExpression;
+}*/i
+
+function PIValue() {
+  const res = Math.PI;
+  aaddToDisplay(res.toString());
 }
