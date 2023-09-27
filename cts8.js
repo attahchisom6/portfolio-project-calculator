@@ -134,31 +134,29 @@ function toggleShiftMode() {
       footerShiftMode.textContent = "shift";
 
       button.addEventListener('click', () => {
-        // Check if a custom label exists for the original label
-        const customLabel = customButtonsLabel[originalLabel];
-        if (customLabel) {
-          const index = currentExpression.lastIndexOf(customLabel);
-          if (index >= 0) {
-            temp = currentExpression.slice(0, index) + originalLabel + currentExpression.slice(index + customLabel.length);
+        const index = currentExpression.lastIndexOf(originalLabel);
+        if (index >= 0) {
+          if (shiftedLabel === 'e^') {
+            temp = currentExpression.slice(0, index) + 'e' + currentExpression.slice(index + originalLabel.length);
             currentExpression = temp;
-            displayedExpression = currentExpression.slice(0, index) + shiftedLabel + currentExpression.slice(index + customLabel.length);
+            displayedExpression = currentExpression.slice(0, index) + "e^" + currentExpression.slice(index + originalLabel.length);
           } else {
-            currentExpression += shiftedLabel;
-            displayedExpression = currentExpression;
-          }
-        } else {
-          const index = currentExpression.lastIndexOf(originalLabel);
-          if (index >= 0) {
             temp = currentExpression.slice(0, index) + shiftedLabel + currentExpression.slice(index + originalLabel.length);
             currentExpression = temp;
             displayedExpression = currentExpression;
-          } else {
-            currentExpression += shiftedLabel;
-            displayedExpression = currentExpression;
           }
+          temp = "";
+        } else {
+          if (shiftedLabel === 'e^') {
+            temp = shiftedLabel;
+            shiftedLabel = 'e';
+          }
+          currentExpression += shiftedLabel;
+          displayedExpression = temp;
         }
         inputField.value = displayedExpression;
       });
+
     } else if (customButtonsLabel.hasOwnProperty(html)) {
       originalLabel = html;
       shiftedLabel = customButtonsLabel[html];
@@ -166,17 +164,15 @@ function toggleShiftMode() {
       button.style.backgroundColor = "";
       footerShiftMode.textContent = "";
 
+      // button.removeEventListener('click');
       button.addEventListener('click', () => {
         const index = currentExpression.lastIndexOf(originalLabel);
         if (index >= 0) {
-          temp = currentExpression.slice(0, index) + shiftedLabel + currentExpression.slice(index + originalLabel.length);
-          currentExpression = temp;
-          displayedExpression = currentExpression;
+          currentExpression = currentExpression.slice(0, index) + shiftedLabel + currentExpression.slice(index + originalLabel.length);
         } else {
           currentExpression += shiftedLabel;
-          displayedExpression = currentExpression;
-        }
-        inputField.value = displayedExpression;
+        };
+        inputField.value = currentExpression;
       });
     }
 
