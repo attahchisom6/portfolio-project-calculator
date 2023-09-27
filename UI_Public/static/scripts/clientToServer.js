@@ -134,12 +134,16 @@ function toggleShiftMode() {
       footerShiftMode.textContent = "shift";
 
       button.addEventListener('click', () => {
-        if (shiftedLabel === 'e^') {                     shiftedLabel = 'e';
+        if (shiftedLabel === 'e^') {
+          shiftedLabel = 'e';
         }
         const index = currentExpression.lastIndexOf(originalLabel);
         if (index >= 0) {
-          temp = currentExpression.slice(0, index) + shiftedLabel + currentExpression.slice(index + originalLabel.length);
-          displayedExpression = currentExpression.slice(0, index) + "e^" + currentExpression.slice(index + originalLabel.length);
+          if (shiftedLabel === '^e') {
+            temp = currentExpression.slice(0, index) + shiftedLabel + currentExpression.slice(index + originalLabel.length);
+            displayedExpression = currentExpression.slice(0, index) + "e^" + currentExpression.slice(index + originalLabel.length);
+          }
+          currentExpression = currentExpression.slice(0, index) + "e^" + currentExpression.slice(index + originalLabel.length);
           currentExpression = temp;
           temp = "";
         } else {
