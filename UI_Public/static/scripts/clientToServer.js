@@ -37,7 +37,7 @@ function clearScreen() {
 function calculate() {
   const mode = footerMode.textContent;
   lastStackedExpression = currentExpression;
-  const expression = encodeURIComponent(currentExpression);
+  const expression = encodeURIComponent(currentExpression).replace('%5E', '(').replace('%5E', ')');
 
   const headers = {
     expression: expression,
@@ -117,6 +117,18 @@ function toggleShiftMode() {
     'b^': 'logb',
   };
 
+  const specialDisplayLabels = {
+    'e^': 'e^',
+    '10^': '10^',
+    'b^': 'b^',
+  };
+
+  const specialBackendLabels = {
+    'e^': 'e',
+    '10^': 'pow10',
+    'b^': 'bRaisedToNum',
+  };
+
   const styles = {
     color: "white",
     backgroundColor: "#0F52BA",
@@ -134,18 +146,11 @@ function toggleShiftMode() {
       footerShiftMode.textContent = "shift";
 
       button.addEventListener('click', () => {
-        // Check if a custom label exists for the original label
-        const customLabel = customButtonsLabel[originalLabel];
-        if (customLabel) {
-          const index = currentExpression.lastIndexOf(customLabel);
-          if (index >= 0) {
-            temp = currentExpression.slice(0, index) + originalLabel + currentExpression.slice(index + customLabel.length);
-            currentExpression = temp;
-            displayedExpression = currentExpression.slice(0, index) + shiftedLabel + currentExpression.slice(index + customLabel.length);
-          } else {
-            currentExpression += shiftedLabel;
-            displayedExpression = currentExpression;
-          }
+        // Check if it's a special display label
+        if (specialDisplayLabels.hasOwnProperty(originalLabel)) {
+          displayedExpression += specialDisplayLabels[originalLabel];
+          // Pass the corresponding special backend label
+          currentExpression += specialBackendLabels[originalLabel];
         } else {
           const index = currentExpression.lastIndexOf(originalLabel);
           if (index >= 0) {
@@ -157,7 +162,10 @@ function toggleShiftMode() {
             displayedExpression = currentExpression;
           }
         }
+        // Modify the encoding here to replace "^" with "(" and ")"
+        // const encodedExpression = encodeURIComponent(currentExpression).replace('%5E', '(').replace('%5E', ')');
         inputField.value = displayedExpression;
+        // console.log("Encoded expression: " + encodedExpression); // Debug output
       });
     } else if (customButtonsLabel.hasOwnProperty(html)) {
       originalLabel = html;
@@ -176,7 +184,10 @@ function toggleShiftMode() {
           currentExpression += shiftedLabel;
           displayedExpression = currentExpression;
         }
+        // Modify the encoding here to replace "^" with "(" and ")"
+        const encodedExpression = encodeURIComponent(currentExpression).replace('%5E', '(').replace('%5E', ')');
         inputField.value = displayedExpression;
+        console.log("Encoded expression: " + encodedExpression); // Debug output
       });
     }
 
@@ -188,33 +199,3 @@ function toggleShiftMode() {
   });
   return shiftedButtons;
 }
-
-/*function handleOperationWithoutOperator(value) {
-  const funcs = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'sec', 'cot'];
-  let parsedExpression = '';
-
-  for (const item of funcs) {
-    if (value.includes(item)) {
-      if (value.lastIndexOf(item) === 0) {
-        let L = value.split(item);
-        L[1] = L[1].trim();
-        if (!L[1].match(/\(.+\)/)) {
-          L[1] = '(' + L[1] + ')';
-        }
-        parsedExpression = item + L[1];
-      } else if (value.lastIndexOf(item) > 0) {
-        let L = value.split(item);
-        L[1] = L[1].trim();
-        if (!L[1].match(/\(.+\)/)) {
-          L[1] = '(' + L[1] + ')';
-        }
-        parsedExpression = L[0] + '*' + item + L[1];
-      } else {
-        parsedExpression = value;
-      }
-    } else {
-      parsedExpression = value;
-    }
-  }
-  return parsedExpression;
-}*/
