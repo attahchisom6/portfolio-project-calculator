@@ -37,7 +37,7 @@ function clearScreen() {
 function calculate() {
   const mode = footerMode.textContent;
   lastStackedExpression = currentExpression;
-  const expression = encodeURIComponent(currentExpression).replace('%5E', '(').replace('%5E', ')');
+  const expression = encodeURIComponent(currentExpression).replace('%5E', '').trim();
 
   const headers = {
     expression: expression,
