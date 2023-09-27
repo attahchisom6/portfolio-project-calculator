@@ -13,8 +13,8 @@ function addToDisplay(value) {
     backendValue = "/";
   } else if (value === "×") {
     backendValue = "*";
-  } else if (value[0] === "√") {
-    backendValue = 'squareRootX';
+  } else if (value === "π") {
+    backendValue = 'PI(anyArg)';
   }
 
   currentExpression += backendValue;
@@ -92,6 +92,8 @@ function toggleMode() {
 function toggleShiftMode() {
   const buttonsToModify = document.querySelectorAll('.comp-operator');
   const shiftedButtons = [];
+  displayedExpression = "";
+  temp = "";
 
   const defaultButtonsLabel = {
     'sin': 'asin',
@@ -132,13 +134,19 @@ function toggleShiftMode() {
       footerShiftMode.textContent = "shift";
 
       button.addEventListener('click', () => {
+        if (shiftedLabel === 'e^') {                     shiftedLabel = 'e';
+        }
         const index = currentExpression.lastIndexOf(originalLabel);
         if (index >= 0) {
-          currentExpression = currentExpression.slice(0, index) + shiftedLabel + currentExpression.slice(index + originalLabel.length);
+          temp = currentExpression.slice(0, index) + shiftedLabel + currentExpression.slice(index + originalLabel.length);
+          displayedExpression = currentExpression.slice(0, index) + "e^" + currentExpression.slice(index + originalLabel.length);
+          currentExpression = temp;
+          temp = "";
         } else {
           currentExpression += shiftLabel;
+          displayedExpression += "e^";
         }
-        inputField.value = currentExpression;
+        inputField.value = displayedExpression;
       });
 
     } else if (customButtonsLabel.hasOwnProperty(html)) {
@@ -197,9 +205,4 @@ function toggleShiftMode() {
     }
   }
   return parsedExpression;
-}*/i
-
-function PIValue() {
-  const res = Math.PI;
-  aaddToDisplay(res.toString());
-}
+}*/

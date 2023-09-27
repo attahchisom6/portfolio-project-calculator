@@ -41,6 +41,10 @@ class Trig {
     return angle;
   }
 
+  static π() {
+    return PI;
+  }
+
   static sine(angle) {
     angle = Trig.theta(angle);
     return Math.sin(angle);
@@ -82,7 +86,7 @@ class Trig {
   }
 
   static atan(angle) {
-    angle = atan(angle);
+    angle = Math.atan(angle);
     return Trig.arcTheta(angle);
   }
 }

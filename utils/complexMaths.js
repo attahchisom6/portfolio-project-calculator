@@ -99,7 +99,7 @@ const logFuncs = {
   'In': Logarithms.In,
   'log': Logarithms.log,
   'logb': Logarithms.logb,
-  'e^': Logarithms.antilogIn,
+  'e': Logarithms.antilogIn,
   '10^': Logarithms.antilog,
   'b^': Logarithms.antilogb,
 };
@@ -113,7 +113,11 @@ const powerFuncs = {
   'nRoot': complexMaths.nRoot,
 };
 
-const otherFuncs = { 'abs': complexMaths.absX };
+const otherFuncs = {
+  'abs': complexMaths.absX,
+  'PI': Trig.π,
+}
+
 
 async function refineExpression(expression) {
   const funcRegex = /(\w+)\s*\(([^)]+)\)/g;
