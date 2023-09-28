@@ -32,9 +32,11 @@ pls if there is something missing in the requirements to achieve these result u 
 
 function handleOperationWithoutOperator(expression) {
   const funcs = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'sec', 'cot', 'cosec'];
+  const splitCriteria = /([-+*/%])/;
 
-  let k = 0;
-  while (expression && k < expression.length) {
+  while (expression) {
     for (const item of funcs) {
-      if (expression.contains(item)) {
+      if (expression.includes(item)) {
         const itemIndex = expression.indexOf(item);
+        const prevItem = expression.slice(0, index).split(sp)[2].split(item)[0].trim();
+        const nextItem = expression.slice(index + item.length)
