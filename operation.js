@@ -30,3 +30,11 @@ the essence of this psuedoCode is to implement a function that achieves the foll
 
 pls if there is something missing in the requirements to achieve these result u can fix or add it and implement a code to thoroughly  satisfy this requirement
 
+function handleOperationWithoutOperator(expression) {
+  const funcs = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'sec', 'cot', 'cosec'];
+
+  let k = 0;
+  while (expression && k < expression.length) {
+    for (const item of funcs) {
+      if (expression.contains(item)) {
+        const itemIndex = expression.indexOf(item);
