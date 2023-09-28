@@ -39,4 +39,4 @@ function handleOperationWithoutOperator(expression) {
       if (expression.includes(item)) {
         const itemIndex = expression.indexOf(item);
         const prevItem = expression.slice(0, index).split(sp)[2].split(item)[0].trim();
-        const nextItem = expression.slice(index + item.length)
+        let nextItem = expression.slice(index + item.length).split(sp)[0]
