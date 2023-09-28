@@ -100,8 +100,8 @@ const logFuncs = {
   'log': Logarithms.log,
   'logb': Logarithms.logb,
   'e': Logarithms.antilogIn,
-  '10^': Logarithms.antilog,
-  'b^': Logarithms.antilogb,
+  '10': Logarithms.antilog,
+  'b': Logarithms.antilogb,
 };
 
 const powerFuncs = {
