@@ -36,14 +36,14 @@ function handleOperationWithoutOperator(expression) {
   let refinedExpression = '';
 
   while (expression) {
+    let processed = true;
     for (const item of funcs) {
-      let processed = false;
       if (expression.includes(item)) {
         const itemIndex = expression.indexOf(item);
         console.log(`index of ${item}: ${itemIndex}`);
         let prevItem = expression.slice(0, itemIndex).split(splitCriteria);
         prevItem = prevItem[prevItem.length - 1].trim();
-        console.log('prevvitems:', prevItem);
+        console.log('prevItems:', prevItem);
         let nextItem = expression.slice(itemIndex + item.length).split(splitCriteria)[0];
         console.log('next items:', nextItem);
         if (isFloatParsible(prevItem)) {
@@ -56,7 +56,6 @@ function handleOperationWithoutOperator(expression) {
         expression = expression.split(itemIndex + item.length);
         console.log('trubcatedExpression:', expression);
         processed = true;
-        break;
       }
     }
     if (!processed) {
@@ -65,11 +64,11 @@ function handleOperationWithoutOperator(expression) {
     break;
   }
   console.log('refinedExpression:', refinedExpression);
-  return refinedExpression;
+  // return refinedExpression;
 }
 
 function isFloatParsible(num) {
-  return !isNan(num);
+  return !isNaN(num);
 }
 
 module.exports = handleOperationWithoutOperator; 
