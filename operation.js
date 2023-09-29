@@ -36,7 +36,7 @@ function handleOperationWithoutOperator(expression) {
   let refinedExpression = '';
 
   while (expression) {
-    let processed = true;
+    let processed = false;
     for (const item of funcs) {
       if (expression.includes(item)) {
         const itemIndex = expression.indexOf(item);
@@ -46,29 +46,33 @@ function handleOperationWithoutOperator(expression) {
         console.log('prevItems:', prevItem);
         let nextItem = expression.slice(itemIndex + item.length).split(splitCriteria)[0];
         console.log('next items:', nextItem);
-        if (isFloatParsible(prevItem)) {
+        if (isFloatParsable(prevItem)) {
           prevItem = prevItem + '*';
         }
-        if (!nextItem.match(/\((\w+)\)/)) {
+        if (!/\((\w+)\)/.test(nextItem)) {
           nextItem = '(' + nextItem + ')';
         }
-        refinedExpression = prevItem + item + nextItem;
-        expression = expression.split(itemIndex + item.length);
-        console.log('trubcatedExpression:', expression);
+        refinedExpression = refinedExpression + prevItem + item + nextItem;
+        expression = expression.slice(itemIndex + item.length);
         processed = true;
+        break;
       }
     }
     if (!processed) {
-      refinedExpression += expression;
+      refinedExpression = refinedExpression + expression;
+      break;
     }
-    break;
   }
-  console.log('refinedExpression:', refinedExpression);
-  // return refinedExpression;
+
+  console.log('Refined Expression:', refinedExpression);
+  return refinedExpression;
 }
 
-function isFloatParsible(num) {
+function isFloatParsable(num) {
+  if (num === '') {
+    return false;
+  }
   return !isNaN(num);
 }
 
-module.exports = handleOperationWithoutOperator; 
+module.exports = handleOperationWithoutOperator;
