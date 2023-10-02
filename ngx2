@@ -1,0 +1,18 @@
+server {
+	listen: 80 default_server;
+	listen: [::]:80 default_server;
+	server-name holb20231tk0q1.tech www.holb20231tk0q1.tech;
+
+	location / {
+		include proxy_params;
+		proxy_pass: http://20.39.196.120/complexCalc;
+		proxy_set_header Expression $http_expression;
+		proxy_set_header Mode $http_mode
+		proxy_set_header Host $host;
+		
+		proxy_http_version: 1.0.0;
+		proxy_set_header Upgrade 'upgrade';
+		proxy_set_header connection $http_upgrade;
+		proxy_bypass_cache $http_upgrade;
+	}
+}
