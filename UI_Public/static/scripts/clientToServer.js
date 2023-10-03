@@ -22,11 +22,71 @@ function addToDisplay(value) {
   inputField.value = displayedExpression;
 }
 
+/*function addToDisplay(value) {
+    let backendValue = value;
+
+    if (value === "÷") {
+        backendValue = "/";
+    } else if (value === "×") {
+        backendValue = "*";
+    } else if (value === "π") {
+        backendValue = 'PI(anyArg)';
+    }
+
+    const lastChar = currentExpression.slice(-1);
+    const operators = ['+', '-', '*', '/'];
+
+    if (operators.includes(lastChar) && operators.includes(backendValue)) {
+        // If the last character and the new value are both operators, replace the last operator
+        currentExpression = currentExpression.slice(0, -1) + backendValue;
+        displayedExpression = displayedExpression.slice(0, -1) + value;
+    } else if (operators.includes(lastChar)) {
+        // If the last character is an operator, replace it with the new operator
+        currentExpression = currentExpression.slice(0, -1) + backendValue;
+        displayedExpression = displayedExpression.slice(0, -1) + value;
+    } else {
+        // If not, simply concatenate the new value
+        currentExpression += backendValue;
+        displayedExpression += value;
+    }
+
+    inputField.value = displayedExpression;
+}*/
+
+
 function deleteLastCharacter() {
   currentExpression = currentExpression.slice(0, -1);
   displayedExpression = displayedExpression.slice(0, -1);
   inputField.value = displayedExpression;
 }
+
+/*function addToDisplay(value) {
+    let backendValue = value;
+
+    if (value === "÷") {
+        backendValue = "/";
+    } else if (value === "×") {
+        backendValue = "*";
+    } else if (value === "π") {
+        backendValue = 'PI(anyArg)';
+    }
+
+    // Check if the last character is an operator
+    const lastChar = currentExpression.slice(-1);
+    const operators = ['+', '-', '*', '/'];
+
+    if (operators.includes(lastChar) && operators.includes(backendValue)) {
+        // If the last character and the new value are both operators, replace the last operator
+        currentExpression = currentExpression.slice(0, -1) + backendValue;
+        displayedExpression = displayedExpression.slice(0, -1) + value;
+    } else {
+        // If not, simply concatenate the new value
+        currentExpression += backendValue;
+        displayedExpression += value;
+    }
+
+    inputField.value = displayedExpression;
+}*/
 
 function clearScreen() {
   currentExpression = '';
@@ -175,32 +235,35 @@ function toggleShiftMode() {
   return shiftedButtons;
 }
 
-function handleOperationWithoutOperator(value) {
-  const funcs = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'sec', 'cot', 'cosec'];
-  let parsedExpression = '';
+// Now lets add event listeners for our laptop keys
+document.addEventListener('keydown', (event) => {
+  const keyCode = event.keyCode;
 
-  for (const item of funcs) {
-    if (value.includes(item)) {
-      if (value.lastIndexOf(item) === 0) {
-        let L = value.split(item);
-        L[1] = L[1].trim();
-        if (!L[1].match(/\(.+\)/)) {
-          L[1] = '(' + L[1] + ')';
-        }
-        parsedExpression = item + L[1];
-      } else if (value.lastIndexOf(item) > 0) {
-        let L = value.split(item);
-        L[1] = L[1].trim();
-        if (!L[1].match(/\(.+\)/)) {
-          L[1] = '(' + L[1] + ')';
-        }
-        parsedExpression = L[0] + '*' + item + L[1];
-      } else {
-        parsedExpression = value;
-      }
-    } else {
-      parsedExpression = value;
-    }
+  const keyboardMapping = {
+    "48": "0", "49": "1", "50": "2", "51": "3", "52": "4",
+    "53": "5", "54": "6", "55": "7", "56": "8", "57": "9",
+    "37": "%", "42": "*", "43": "+", "45": "-", "47": "/",
+    "8": "Backspace", "13": "Enter", "44": ",", "46": ".",
+    "67": "C",
   }
-  return parsedExpression;
-} 
+
+  if (keyboardMapping.hasOwnProperty(keyCode.toString())) {
+    const key = keyboardMapping[keyCode].toString();
+    if (key === "Enter") {
+      calculate();
+    } else if (key === "Backspace") {
+      deleteLastCharacter();
+    } else if (key === "C") {
+      clearScreen();
+    } else {
+      addTo
+      currentExpression += key;
+      inputField.value = currentExpresssion;
+    }
+    event.preventDefault();
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  inputField.focus();
+});
