@@ -5,8 +5,24 @@ let currentExpression = '';
 let displayedExpression = '';
 let lastStackedExpression = '';
 let lastStackedValue = '';
+let enabled = true;
+
+function calculatorState() {
+  const powerButton = document.querySelectorAll('.head-button')[1];
+  enabled = !enabled;
+  if (!enabled) {
+    inputField.value = 'Sleeping... Wake me wen you need me...';
+    powerButton.style.backgroundColor = '#DC143C';
+    powerButton.textContent = "Wake"
+  } else {
+    inputField.value = '0';
+    powerButton.style.backgroundColor = 'white';
+    powerButton.textContent = "Off/On"
+  }
+}
 
 function addToDisplay(value) {
+  if (!enabled) return;
   let backendValue = value;
 
   if (value === "÷") {
@@ -55,46 +71,24 @@ function addToDisplay(value) {
 
 
 function deleteLastCharacter() {
+  if (!enabled) return;
+
   currentExpression = currentExpression.slice(0, -1);
   displayedExpression = displayedExpression.slice(0, -1);
   inputField.value = displayedExpression;
 }
 
-/*function addToDisplay(value) {
-    let backendValue = value;
-
-    if (value === "÷") {
-        backendValue = "/";
-    } else if (value === "×") {
-        backendValue = "*";
-    } else if (value === "π") {
-        backendValue = 'PI(anyArg)';
-    }
-
-    // Check if the last character is an operator
-    const lastChar = currentExpression.slice(-1);
-    const operators = ['+', '-', '*', '/'];
-
-    if (operators.includes(lastChar) && operators.includes(backendValue)) {
-        // If the last character and the new value are both operators, replace the last operator
-        currentExpression = currentExpression.slice(0, -1) + backendValue;
-        displayedExpression = displayedExpression.slice(0, -1) + value;
-    } else {
-        // If not, simply concatenate the new value
-        currentExpression += backendValue;
-        displayedExpression += value;
-    }
-
-    inputField.value = displayedExpression;
-}*/
-
 function clearScreen() {
+  if (!enabled) return;
+
   currentExpression = '';
   displayedExpression = '';
   inputField.value = '0';
 }
 
 function calculate() {
+  if (!enabled) return;
+
   const mode = footerMode.textContent;
   lastStackedExpression = currentExpression;
   const expression = encodeURIComponent(currentExpression).replace('%5E', '').trim();
@@ -123,6 +117,8 @@ function calculate() {
 }
 
 function lastOperatedExpression() {
+  if (!enabled) return;
+
   if (currentExpression === '') {
     currentExpression = lastStackedExpression;
   } else {
@@ -132,6 +128,8 @@ function lastOperatedExpression() {
 }
 
 function lastOperationValue() {
+  if (!enabled) return;
+
   if (currentExpression === '') {
     currentExpression = lastStackedValue;
   } else {
@@ -141,6 +139,8 @@ function lastOperationValue() {
 }
 
 function toggleMode() {
+  if (!enabled) return;
+
   const defaultt = "Rad";
   if (footerMode.textContent === defaultt) {
     footerMode.textContent = "Deg";
@@ -150,6 +150,8 @@ function toggleMode() {
 }
 
 function toggleShiftMode() {
+  if (!enabled) return;
+
   const buttonsToModify = document.querySelectorAll('.comp-operator');
   const shiftedButtons = [];
   displayedExpression = "";
@@ -237,6 +239,7 @@ function toggleShiftMode() {
 
 // Now lets add event listeners for our laptop keys
 document.addEventListener('keydown', (event) => {
+  if (!enabled) return;
   const keyCode = event.keyCode;
 
   const keyboardMapping = {
@@ -256,9 +259,7 @@ document.addEventListener('keydown', (event) => {
     } else if (key === "C") {
       clearScreen();
     } else {
-      addTo
-      currentExpression += key;
-      inputField.value = currentExpresssion;
+      addToDisplay(key);
     }
     event.preventDefault();
   }

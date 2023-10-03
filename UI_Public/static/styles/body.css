@@ -7,7 +7,6 @@
 
 body {
   background-color: #000000;
-  height: 100vh;
   text-align: center;
   color: #FFFFFF;
   font-family: Arial, sans-serif;
@@ -41,7 +40,7 @@ body {
   text-align: center;
   line-height: 15px;
   user-select: none;
-  /*cursor: pointer;*/
+  cursor: pointer;
 }
 
 .row {
@@ -50,18 +49,18 @@ body {
   justify-content: center;
 }
 
-.number,
+.number ,
 .operator {
   width: 50px;
   height: 50px;
-  margin: 15px;
+  margin: 5px;
   border: 2px solid #DDDDDD;
   padding: 2px;
   text-align: center;
   line-height: 20px;
   border-radius: 1px;
   user-select: none;
-  /*cursor: pointer;*/
+  cursor: pointer;
 }
 
 .operator {
@@ -111,9 +110,10 @@ body {
   color: orange;
 }
 
-/*Make the row button responsive*/
+/* Add this media query to control button width for smaller screens */
 @media (max-width: 768px) {
-  .number, .operator {
-    width: 50px;
+  .number,
+  .operator {
+    width: 50px; /* Adjust for smaller screens */
   }
 }
