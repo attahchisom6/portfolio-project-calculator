@@ -32,7 +32,7 @@ class Trig {
   static arcTheta(angle) {
     switch (this.CalcMode) {
       case 'Degree':
-        angle = (180 * angle) / Math.PI;
+        angle = (180 * angle) / PI;
         break;
       default:
         angle = angle;
@@ -61,17 +61,14 @@ class Trig {
   }
 
   static cosec(angle) {
-    angle = Trig.theta(angle);
     return  1 / Trig.sine(angle);
   }
 
   static sec(angle) {
-    angle = Trig.theta(angle);
     return 1 / Trig.cos(angle);
   }
 
   static cot(angle) {
-    angle = Trig.theta(angle);
     return 1 / Trig.tan(angle);
   }
 

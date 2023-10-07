@@ -1,11 +1,11 @@
-import evaluateMathExpression from './elementaryMaths';
+/*import evaluateMathExpression from './elementaryMaths';
 import Trig from './trig';
-import Logarithms from './logarithms';
+import Logarithms from './logarithms';*/
 
-/* const { evaluateMathExpression } = require('./elementaryMaths');
+const { evaluateMathExpression } = require('./elementaryMaths');
 const Trig = require('./trig');
 const Logarithms = require('./logarithms');
-const loga = Logarithms;*/
+const loga = Logarithms;
 
 class complexMaths {
   static async squareX(x) {
@@ -120,13 +120,13 @@ const otherFuncs = {
 
 
 async function refineExpression(expression) {
-  const funcRegex = /(\w+)\s*\(([^)]+)\)/g;
+  const funcRegex = /(\w+)\s*\((.*)\)/g;
 
   async function evaluateTerm(match) {
     console.log("Matching:", match);
 
-    const funcName = match.split('(')[0]
-    const args = match.split('(')[1].slice(0, -1);
+    const matchRegex = /(\w+)\(([\s\S]*)\)/;
+    let [, funcName, args] = match.match(matchRegex);
 
     console.log("Function Name:", funcName);
     console.log("Arguments:", args);
@@ -308,6 +308,6 @@ async function evaluateComplexMathExpression(expression) {
   return await evaluateMathExpression(expression);
 }
 
-// module.exports = { evaluateComplexMathExpression, refineExpression };
+module.exports = { evaluateComplexMathExpression, refineExpression };
 
-export default evaluateComplexMathExpression;
+// export default evaluateComplexMathExpression;
