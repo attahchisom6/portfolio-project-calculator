@@ -1,10 +1,11 @@
-/*import evaluateMathExpression from './elementaryMaths';
+import evaluateMathExpression from './elementaryMaths';
 import Trig from './trig';
-import Logarithms from './logarithms';*/
+import Logarithms from './logarithms';
 
-const { evaluateMathExpression } = require('./elementaryMaths');
+/*const { evaluateMathExpression } = require('./elementaryMaths');
 const Trig = require('./trig');
-const Logarithms = require('./logarithms');
+const Logarithms = require('./logarithms');*/
+
 const loga = Logarithms;
 
 class complexMaths {
