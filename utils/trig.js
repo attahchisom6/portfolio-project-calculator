@@ -88,5 +88,5 @@ class Trig {
   }
 }
 
-module.exports = Trig;
-// export default Trig;
+// module.exports = Trig;
+export default Trig;

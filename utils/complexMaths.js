@@ -308,6 +308,6 @@ async function evaluateComplexMathExpression(expression) {
   return await evaluateMathExpression(expression);
 }
 
-module.exports = { evaluateComplexMathExpression, refineExpression };
+// module.exports = { evaluateComplexMathExpression, refineExpression };
 
-// export default evaluateComplexMathExpression;
+export default evaluateComplexMathExpression;
