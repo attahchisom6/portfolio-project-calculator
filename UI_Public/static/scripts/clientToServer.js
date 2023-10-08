@@ -36,7 +36,7 @@ function addToDisplay(value) {
   currentExpression += backendValue;
   displayedExpression += value;
 
-  // handle displayedValue for kryboard keys
+  // handle displayedValue for keyboard keys
   if (displayedExpression.includes('*')) {
     displayedExpression = displayedExpression.replace('*', '×');
   } else if (displayedExpression.includes('/')) {
