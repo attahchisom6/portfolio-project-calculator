@@ -7,7 +7,7 @@ let lastStackedExpression = '';
 let lastStackedValue = '';
 let enabled = true;
 
-function calculatorState() {
+function togglePower() {
   const powerButton = document.querySelectorAll('.head-button')[1];
   enabled = !enabled;
   if (!enabled) {
@@ -35,40 +35,15 @@ function addToDisplay(value) {
 
   currentExpression += backendValue;
   displayedExpression += value;
+
+  // handle displayedValue for kryboard keys
+  if (displayedExpression.includes('*')) {
+    displayedExpression = displayedExpression.replace('*', '×');
+  } else if (displayedExpression.includes('/')) {
+    displayedExpression = displayedExpression.replace('/', '÷');
+  }
   inputField.value = displayedExpression;
 }
-
-/*function addToDisplay(value) {
-    let backendValue = value;
-
-    if (value === "÷") {
-        backendValue = "/";
-    } else if (value === "×") {
-        backendValue = "*";
-    } else if (value === "π") {
-        backendValue = 'PI(anyArg)';
-    }
-
-    const lastChar = currentExpression.slice(-1);
-    const operators = ['+', '-', '*', '/'];
-
-    if (operators.includes(lastChar) && operators.includes(backendValue)) {
-        // If the last character and the new value are both operators, replace the last operator
-        currentExpression = currentExpression.slice(0, -1) + backendValue;
-        displayedExpression = displayedExpression.slice(0, -1) + value;
-    } else if (operators.includes(lastChar)) {
-        // If the last character is an operator, replace it with the new operator
-        currentExpression = currentExpression.slice(0, -1) + backendValue;
-        displayedExpression = displayedExpression.slice(0, -1) + value;
-    } else {
-        // If not, simply concatenate the new value
-        currentExpression += backendValue;
-        displayedExpression += value;
-    }
-
-    inputField.value = displayedExpression;
-}*/
-
 
 function deleteLastCharacter() {
   if (!enabled) return;
@@ -116,7 +91,8 @@ function calculate() {
   clearScreen();
 }
 
-function lastOperatedExpression() {
+function lastOperationExpression() {
+  displayedExpression = '';
   if (!enabled) return;
 
   if (currentExpression === '') {
@@ -124,7 +100,11 @@ function lastOperatedExpression() {
   } else {
     currentExpression += lastStackedExpression;
   }
-  inputField.value = currentExpression;
+  displayedExpression = currentExpression;
+  if (displayedExpression.includes('PI(anyArg)')) {
+    displayedExpression = displayedExpression.replace('PI(anyArg)', 'π');
+  }
+  inputField.value = displayedExpression;
 }
 
 function lastOperationValue() {
@@ -237,34 +217,32 @@ function toggleShiftMode() {
   return shiftedButtons;
 }
 
-// Now lets add event listeners for our laptop keys
-document.addEventListener('keydown', (event) => {
-  if (!enabled) return;
-  const keyCode = event.keyCode;
-
-  const keyboardMapping = {
-    "48": "0", "49": "1", "50": "2", "51": "3", "52": "4",
-    "53": "5", "54": "6", "55": "7", "56": "8", "57": "9",
-    "37": "%", "42": "*", "43": "+", "45": "-", "47": "/",
-    "8": "Backspace", "13": "Enter", "44": ",", "46": ".",
-    "67": "C",
-  }
-
-  if (keyboardMapping.hasOwnProperty(keyCode.toString())) {
-    const key = keyboardMapping[keyCode].toString();
-    if (key === "Enter") {
-      calculate();
-    } else if (key === "Backspace") {
-      deleteLastCharacter();
-    } else if (key === "C") {
-      clearScreen();
-    } else {
-      addToDisplay(key);
-    }
-    event.preventDefault();
-  }
-});
-
 document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('keydown', (event) => {
+    const keyPressed = event.key;
+    const excludedKeys = ['Shift', 'Control', 'CapsLock'];
+
+    if (!excludedKeys.includes(keyPressed)) {
+      if (keyPressed === "Backspace") {
+        deleteLastCharacter();
+      } else if (keyPressed === 'C') {
+        clearScreen();
+      } else if (keyPressed === 'Enter') {
+        calculate();
+      } else if (keyPressed === 'Escape') {
+        togglePower();
+      } else if (keyPressed === 'M') {
+        toggleMode();
+      } else if (keyPressed === 'S') {
+        toggleShiftMode();
+      } else if (keyPressed === 'H') {
+        lastOperationExpression();
+      } else if (keyPressed === 'A') {
+        lastOperationValue();
+      } else {
+        addToDisplay(keyPressed);
+      }
+    }
+  });
   inputField.focus();
 });
