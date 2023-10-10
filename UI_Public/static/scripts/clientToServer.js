@@ -1,3 +1,6 @@
+// import { handleOperationWithoutOperator } from './withoutOpr';
+
+
 const inputField = document.querySelector('#display');
 let footerMode = document.querySelector('#calc-mode');
 let footerShiftMode = document.querySelector('#shift-btn');
@@ -11,11 +14,11 @@ function togglePower() {
   const powerButton = document.querySelectorAll('.head-button')[1];
   enabled = !enabled;
   if (!enabled) {
-    inputField.value = 'Sleeping... Wake me wen you need me...';
+    inputField.value = 'Sleeping... Wake me when you need me...';
     powerButton.style.backgroundColor = '#DC143C';
     powerButton.textContent = "Wake"
   } else {
-    inputField.value = '0';
+    inputField.value = "0";
     powerButton.style.backgroundColor = 'white';
     powerButton.textContent = "Off/On"
   }
@@ -34,6 +37,9 @@ function addToDisplay(value) {
   }
 
   currentExpression += backendValue;
+  if (currentExpression.includes('!')) {
+    currentExpression = disect(currentExpression);
+  }
   displayedExpression += value;
 
   // handle displayedValue for keyboard keys
@@ -62,6 +68,7 @@ function clearScreen() {
 }
 
 function calculate() {
+  let expr;
   if (!enabled) return;
 
   const mode = footerMode.textContent;
@@ -185,6 +192,7 @@ function toggleShiftMode() {
           currentExpression += shiftedLabel;
           displayedExpression = currentExpression;
         }
+        currentExpression = handleOperationWithoutOperator(currentExpression);
         inputField.value = displayedExpression;
       });
     } else if (customButtonsLabel.hasOwnProperty(html)) {
@@ -218,6 +226,7 @@ function toggleShiftMode() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  let cusorPosition = 0;
   document.addEventListener('keydown', (event) => {
     const keyPressed = event.key;
     const excludedKeys = ['Shift', 'Control', 'CapsLock'];
@@ -242,7 +251,89 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         addToDisplay(keyPressed);
       }
+    } else {
+      if (keyPressed === 'LeftArrow') {
+        // move left
+        if (cusorPosition > 0) {
+          cusorPosition--;
+        }
+      } else if (keyPressed === 'RightArrow') {
+        // move right
+        if (cusorPosition < displayedExpression.length) {
+          cusorPosition++;
+        }
+      } else {
+        inputField.value = displayedExpression;;
+        inputField.setSelectionRange(cusorPosition, cusorPosition);
+      }
     }
   });
   inputField.focus();
 });
+
+function disect(currentExpression) {
+  if (currentExpression.includes('!')) {
+    let  val, temp;
+    let argsArray = currentExpression.split(/([-+*/%])/);
+    console.log(argsArray);
+    argsArray = argsArray.map((arg) => {
+      arg = arg.trim();
+      console.log('teimmes arg', arg);
+      if (arg.includes('!')) {
+        arg = arg.replace('!', '');
+        arg = `F(${arg})`
+        console.log('processed arg:', arg);
+      }
+      return arg;
+    });
+    currentExpression = argsArray.join('');
+    console.log('modified exoression:', currentExpression);
+  }
+  return currentExpression;
+}
+
+
+const trigFunctions = ["sin", "cos", "tan",  "cosec", "sec", "cot", "asin", "acos", "atan"];
+
+function isFloatParsable(num) {
+  if (num === '') {
+    return false;
+  }
+  return !isNaN(parseFloat(num));
+}
+
+function getFloatPrev(arg) {
+  if (!trigFunctions.some((func) => arg.includes(func))) {
+    return arg;
+  }
+
+  let expr = arg;
+  for (const func of trigFunctions) {
+    const regex = new RegExp('(\\d+)' + func, 'g');
+    expr = expr.replace(regex, `$1*${func}`);
+  }
+  return expr;
+}
+
+function getFloatNext(arg) {
+  // Check if the input argument contains any trigonometric functions, and just return the arg if does not
+  if (!trigFunctions.some((func) => arg.includes(func))) {
+    return arg;
+  }
+
+  let expr = arg;
+  for (const func of trigFunctions) {
+    const regex = new RegExp(func + '(\\d+)', 'g');
+    expr = expr.replace(regex, `${func}($1)`);
+  }
+  return expr;
+}
+
+function handleOperationWithoutOperator(expression) {
+  let expr;
+  expr = getFloatPrev(expression);
+  if (expr) {
+    expr = getFloatNext(expr);
+  }
+  return expr;
+}
