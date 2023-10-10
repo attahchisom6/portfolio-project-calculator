@@ -1,6 +1,10 @@
-import evaluateMathExpression from '../utils/elementaryMaths';
+/*import evaluateMathExpression from '../utils/elementaryMaths';
 import evaluateComplexMathExpression from '../utils/complexMaths';
-import Trig from '../utils/trig';
+import Trig from '../utils/trig';*/
+
+const { evaluateMathExpression } = require('../utils/elementaryMaths');
+const { evaluateComplexMathExpression } = require('../utils/complexMaths');
+const Trig = require('../utils/trig');
 
 class MathsController {
   static async getBasicCalc(req, res) {
@@ -33,5 +37,5 @@ class MathsController {
   }
 }
 
- // module.exports = ElemMathsController;
-export default MathsController;
+module.exports = MathsController;
+// export default MathsController;
