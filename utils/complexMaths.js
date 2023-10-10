@@ -1,10 +1,10 @@
-import evaluateMathExpression from './elementaryMaths';
+/*import evaluateMathExpression from './elementaryMaths';
 import Trig from './trig';
-import Logarithms from './logarithms';
+import Logarithms from './logarithms';*/
 
-/*const { evaluateMathExpression } = require('./elementaryMaths');
+const { evaluateMathExpression } = require('./elementaryMaths');
 const Trig = require('./trig');
-const Logarithms = require('./logarithms');*/
+const Logarithms = require('./logarithms');
 
 const loga = Logarithms;
 
@@ -82,6 +82,31 @@ class complexMaths {
       }, 0);
     });
   }
+
+  static async π() {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(Math.PI);
+      }, 0);
+    });
+  }
+
+  static async factorial(num) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        let result = 1;
+        if (num <= 0) {
+          result = 1;
+        }
+        let k = num;
+        while (k > 0) {
+          result *= k;
+          k--;
+        }
+        resolve(result);
+      }, 0);
+    });
+  }
 }
 
 const trigFuncs = {
@@ -116,12 +141,13 @@ const powerFuncs = {
 
 const otherFuncs = {
   'abs': complexMaths.absX,
-  'PI': Trig.π,
+  'PI': complexMaths.π,
+  'F': complexMaths.factorial,
 }
 
 
 async function refineExpression(expression) {
-  const funcRegex = /(\w+)\s*\((.*)\)/g;
+  const funcRegex = /(\w+)\s*\((.*)\)+/g;
 
   async function evaluateTerm(match) {
     console.log("Matching:", match);
@@ -309,6 +335,6 @@ async function evaluateComplexMathExpression(expression) {
   return await evaluateMathExpression(expression);
 }
 
-// module.exports = { evaluateComplexMathExpression, refineExpression };
+module.exports = { evaluateComplexMathExpression, refineExpression, complexMaths };
 
-export default evaluateComplexMathExpression;
+// export default evaluateComplexMathExpression;

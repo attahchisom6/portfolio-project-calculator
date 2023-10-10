@@ -41,10 +41,6 @@ class Trig {
     return angle;
   }
 
-  static π() {
-    return PI;
-  }
-
   static sine(angle) {
     angle = Trig.theta(angle);
     return Math.sin(angle);
@@ -88,5 +84,5 @@ class Trig {
   }
 }
 
-// module.exports = Trig;
-export default Trig;
+module.exports = Trig;
+// export default Trig;

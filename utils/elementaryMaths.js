@@ -155,6 +155,6 @@ function precedence(operator) {
   }
 }
 
-// module.exports = { ElemMaths, evaluateMathExpression };
+module.exports = { ElemMaths, evaluateMathExpression };
 
-export default evaluateMathExpression;
+//.export default evaluateMathExpression;
