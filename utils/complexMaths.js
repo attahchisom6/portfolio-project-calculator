@@ -1,4 +1,4 @@
-/*import evaluateMathExpression from './elementaryMaths';
+/* import evaluateMathExpression from './elementaryMaths';
 import Trig from './trig';
 import Logarithms from './logarithms';*/
 
