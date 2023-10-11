@@ -5,6 +5,7 @@ import Trig from '../utils/trig';*/
 const { evaluateMathExpression } = require('../utils/elementaryMaths');
 const { evaluateComplexMathExpression } = require('../utils/complexMaths');
 const Trig = require('../utils/trig');
+const handleOperationWithoutOperator = require('../controllers/withoutOpr');
 
 class MathsController {
   static async getBasicCalc(req, res) {
@@ -24,7 +25,8 @@ class MathsController {
       Trig.CalcMode = mode;
       console.log('This is the mode:', Trig.CalcMode);
       console.log('expression recieved:', expression);
-      console.log('passed expression', expression);
+      expression = handleOperationWithoutOperator(expression);
+      console.log('processed expression', expression);
       expression = decodeURIComponent(expression);
       console.log('decoded expression:', expression);
       const result = await evaluateComplexMathExpression(expression);
