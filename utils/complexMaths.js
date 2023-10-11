@@ -145,184 +145,202 @@ const otherFuncs = {
   'F': complexMaths.factorial,
 }
 
+async function evaluateTerm(match) {
+  console.log("Matching:", match);
+
+  const funcRegex = /(\w+)\s*\((.*)\)/g;
+  const matchRegex = /(\w+)\(([\s\S]*)\)/g;
+;
+  let [, funcName, args] = match.match(/(\w+)\(([\s\S]*)\)/);
+
+  console.log("Function Name:", funcName);
+  console.log("Arguments:", args);
+
+  let recursiveResult = args;
+  console.log("initial recursiveResult", recursiveResult);
+
+  // Recursive loop to evaluate nested expressions
+  while (funcRegex.test(recursiveResult)) {
+    recursiveResult = await recursiveResult.replaceAsync(funcRegex, async (nestedMatch) => {
+      console.log("nested match", nestedMatch);
+      return await evaluateTerm(nestedMatch);
+      // Recursively evaluate nested expressions
+      });
+  }
+  console.log("These are the recursive result:", recursiveResult);
+
+  const isFloatParsable = (array) => {
+    return array.every((item) => !isNaN(parseFloat(item)));
+  }
+  const splitField = [];
+  let currentTerm = "";
+  let parenCount = 0;
+
+  for (const char of recursiveResult) {
+    if (char === '(') {
+      parenCount++;
+    } else if (char === ')') {
+      parenCount--;
+    }
+
+    if (parenCount === 0 && (char === '+' || char === '-' || char === '*' || char === '/' || char === '%' || char === '(' || char === ')')) {
+      splitField.push(currentTerm.trim(), char);
+      currentTerm = "";
+    } else {
+      currentTerm += char;
+    }
+  }
+  splitField.push(currentTerm.trim());
+  console.log("This is splitField", splitField);
+
+  let expr = "";
+  const exprList = [];
+  const operators = [];
+
+  for (let k = 0; k < splitField.length; k += 2) {
+    const operand = splitField[k];
+    let operator = splitField[k + 1];
+
+    // set operor to seFlag here so we will ths expression does not include an operator
+    if (!operator) {
+      operator = 'setFlag';
+    }
+    exprList.push(operand);
+    operators.push(operator);
+    console.log("expList", exprList);
+    console.log("operator List", operators);
+  }
+
+  if (isFloatParsable(exprList)) {
+    expr = exprList[0];
+    for (let k = 0; k < operators.length; k += 1) {
+      if (operators[k] === "setFlag") {
+        // recursiveResult = recursiveResult;
+        continue;
+        console.log('In this block one or mutiple float arguments were passed without an operator:', recursiveResult);
+      } else {
+        expr += operators[k] + exprList[k + 1];
+        recursiveResult = await evaluateMathExpression(expr);
+        console.log("arguments passed with operator:", recursiveResult);
+      }
+    }
+    console.log('This is expr:', expr);
+    console.log('When expr has only numbers, recursiveResult:', recursiveResult);
+  } else {
+    recursiveResult = recursiveResult;
+    console.log("When expr has terms with a function call, recursiveResult are not numbers:", recursiveResult);
+  }
+
+  if (funcName in trigFuncs) {
+    console.log('recursive result in trigFuncs:', recursiveResult);
+    try {
+      recursiveResult = recursiveResult.toString();
+      const result = await (async () => {
+        const argsArray = recursiveResult.split(',').map(arg => parseFloat(arg.trim()));
+        if (argsArray.length === 1 && !isNaN(argsArray[0])) {
+          return await trigFuncs[funcName](argsArray[0]);
+        } else {
+          return await trigFuncs[funcName](...argsArray);
+        }
+      })();
+
+      console.log("Result:", result);
+      return result;
+    } catch (error) {
+      console.log("Error in trigFuncs:", error);
+      throw new Error(`${funcName}(${args})`);
+    }
+  } else if (funcName in logFuncs) {
+    console.log('recursive result in logFuncs:', recursiveResult);
+    try {
+      recursiveResult = recursiveResult.toString();
+      const result = await (async () => {
+        const argsArray = recursiveResult.split(',').map((arg) => parseFloat(arg.trim()));
+        if (argsArray.length === 1 && !isNaN(argsArray[0])) {
+          return await logFuncs[funcName](argsArray[0]);
+        } else {
+          return await logFuncs[funcName](...argsArray);
+        }
+      })();
+
+      console.log("Result:", result);
+      return result;
+    } catch (error) {
+      console.log("Error in logFuncs:", error);
+      throw new Error(`${funcName}(${args})`);
+    }
+  } else if (funcName in powerFuncs) {
+    console.log('recursive result in powerFuncs:', recursiveResult);
+    try {
+      recursiveResult = recursiveResult.toString();
+      const result = await (async () => {
+        const argsArray = recursiveResult.split(',').map(arg => parseFloat(arg.trim()));
+        if (argsArray.length === 1 && !isNaN(argsArray[0])) {
+          return await powerFuncs[funcName](argsArray[0]);
+        } else {
+          return await powerFuncs[funcName](...argsArray);
+        }
+      })();
+
+      console.log("Result:", result);
+      return result;
+    } catch (error) {
+      console.log("Error in power Funcs:", error);
+      throw new Error(`${funcName}(${args})`);
+    }
+  } else if (funcName in otherFuncs) {
+    console.log(`recursive result in ${funcName}:`, recursiveResult);
+    try {
+      recursiveResult = recursiveResult.toString();
+      const result = await (async () => {
+        const argsArray = recursiveResult.split(',').map(arg => parseFloat(arg.trim()));
+        if (argsArray.length === 1 && !isNaN(argsArray[0])) {
+          return await otherFuncs[funcName](argsArray[0]);
+        } else {
+          return await otherFuncs[funcName](...argsArray);
+        }
+      })();
+
+      console.log("Result:", result);
+      return result;
+    } catch (error) {
+      console.log("Error in otherFuncs:", error);
+      throw new Error(`${funcName}(${args})`);
+    }
+  }
+}
 
 async function refineExpression(expression) {
-  const funcRegex = /(\w+)\s*\((.*)\)+/g;
+  const funcRegex = /(\w+)\s*\((.*)\)/g;
+  const RESULT = [];
+  let result;
 
-  async function evaluateTerm(match) {
-    console.log("Matching:", match);
+  const matchRegex = /(\w+)\(([^()]+)\)/g;
+  const matchArray = expression.match(matchRegex);
+  console.log('Match Array:', matchArray);
+  let matchResult, k = 0;
+  
+  /*if (!matchArray) {
+    result = expression;
+    // RESULT.push(result);
+    return result;
+  }*/
 
-    const matchRegex = /(\w+)\(([^()]+)\)/g;
-    const matchArray = match.match(matchRegex);
-    let matchResult, k = 0;
-    while (k < matchArray.length) {
+  for (let k = 0; k < matchArray.length; k += 1) {
     matchResult = matchArray[k];
-    console.log('match result:', matchResult);
-    let [, funcName, args] = matchResult.match(/(\w+)\(([\s\s]*)\)/);
 
-    console.log("Function Name:", funcName);
-    console.log("Arguments:", args);
-
-    let recursiveResult = args;
-    console.log("initial recursiveResult", recursiveResult);
-
-    // Recursive loop to evaluate nested expressions
-    while (funcRegex.test(recursiveResult)) {
-      recursiveResult = await recursiveResult.replaceAsync(funcRegex, async (nestedMatch) => {
-        console.log("nested match", nestedMatch);
-        return await evaluateTerm(nestedMatch); // Recursively evaluate nested expressions
+    while (funcRegex.test(matchResult)) {
+      console.log('Expression here:', matchResult);
+      expression = await matchResult.replaceAsync(funcRegex, async (match) => {
+        const res = await evaluateTerm(match);
+        RESULT.push(res);
+        return res.toString();
       });
-    }
-    console.log("These are the recursive result:", recursiveResult);
-
-    const isFloatParsable = (array) => {
-      return array.every((item) => !isNaN(parseFloat(item)));
-    }
-    const splitField = [];
-    let currentTerm = "";
-    let parenCount = 0;
-
-    for (const char of recursiveResult) {
-      if (char === '(') {
-        parenCount++;
-      } else if (char === ')') {
-        parenCount--;
-      }
-
-      if (parenCount === 0 && (char === '+' || char === '-' || char === '*' || char === '/' || char === '%' || char === '(' || char === ')')) {
-        splitField.push(currentTerm.trim(), char);
-        currentTerm = "";
-      } else {
-        currentTerm += char;
-      }
-    }
-    splitField.push(currentTerm.trim());
-    console.log("This is splitField", splitField);
-
-    let expr = "";
-    const exprList = [];
-    const operators = [];
-
-    for (let k = 0; k < splitField.length; k += 2) {
-      const operand = splitField[k];
-      let operator = splitField[k + 1];
-
-      // set operor to seFlag here so we will ths expression does not include an operator
-      if (!operator) {
-        operator = 'setFlag';
-      }
-      exprList.push(operand);
-      operators.push(operator);
-      console.log("expList", exprList);
-      console.log("operator List", operators);
-    }
-
-    if (isFloatParsable(exprList)) {
-      expr = exprList[0];
-      for (let k = 0; k < operators.length; k += 1) {
-        if (operators[k] === "setFlag") {
-          recursiveResult = recursiveResult;
-          console.log('In this block one or mutiple float arguments were passed without an operator:', recursiveResult);
-        } else {
-          expr += operators[k] + exprList[k + 1];
-          recursiveResult = await evaluateMathExpression(expr);
-          console.log("arguments passed with operator:", recursiveResult);
-        }
-      }
-      console.log('This is expr:', expr);
-      console.log('When expr has only numbers, recursiveResult:', recursiveResult);
-    } else {
-      recursiveResult = recursiveResult;
-      console.log("When expr has terms with a function call, recursiveResult are not numbers:", recursiveResult);
-    }
-
-    if (funcName in trigFuncs) {
-      console.log('recursive result in trigFuncs:', recursiveResult);
-      try {
-        recursiveResult = recursiveResult.toString();
-        const result = await (async () => {
-          const argsArray = recursiveResult.split(',').map(arg => parseFloat(arg.trim()));
-          if (argsArray.length === 1 && !isNaN(argsArray[0])) {
-            return await trigFuncs[funcName](argsArray[0]);
-          } else {
-            return await trigFuncs[funcName](...argsArray);
-          }
-        })();
-
-        console.log("Result:", result);
-        return result;
-      } catch (error) {
-        console.log("Error in trigFuncs:", error);
-        throw new Error(`${funcName}(${args})`);
-      }
-    } else if (funcName in logFuncs) {
-      console.log('recursive result in logFuncs:', recursiveResult);
-      try {
-        recursiveResult = recursiveResult.toString();
-        const result = await (async () => {
-          const argsArray = recursiveResult.split(',').map((arg) => parseFloat(arg.trim()));
-          if (argsArray.length === 1 && !isNaN(argsArray[0])) {
-            return await logFuncs[funcName](argsArray[0]);
-          } else {
-            return await logFuncs[funcName](...argsArray);
-          }
-        })();
-
-        console.log("Result:", result);
-        return result;
-      } catch (error) {
-        console.log("Error in logFuncs:", error);
-        throw new Error(`${funcName}(${args})`);
-      }
-    } else if (funcName in powerFuncs) {
-      console.log('recursive result in powerFuncs:', recursiveResult);
-      try {
-        recursiveResult = recursiveResult.toString();
-        const result = await (async () => {
-          const argsArray = recursiveResult.split(',').map(arg => parseFloat(arg.trim()));
-          if (argsArray.length === 1 && !isNaN(argsArray[0])) {
-            return await powerFuncs[funcName](argsArray[0]);
-          } else {
-            return await powerFuncs[funcName](...argsArray);
-          }
-        })();
-
-        console.log("Result:", result);
-        return result;
-      } catch (error) {
-        console.log("Error in power Funcs:", error);
-        throw new Error(`${funcName}(${args})`);
-      }
-    } else if (funcName in otherFuncs) {
-      console.log(`recursive result in ${funcName}:`, recursiveResult);
-      try {
-        recursiveResult = recursiveResult.toString();
-        const result = await (async () => {
-          const argsArray = recursiveResult.split(',').map(arg => parseFloat(arg.trim()));
-          if (argsArray.length === 1 && !isNaN(argsArray[0])) {
-            return await otherFuncs[funcName](argsArray[0]);
-          } else {
-            return await otherFuncs[funcName](...argsArray);
-          }
-        })();
-
-        console.log("Result:", result);
-        return result;
-      } catch (error) {
-        console.log("Error in otherFuncs:", error);
-        throw new Error(`${funcName}(${args})`);
-      }
-    } k++;
+      break;
     }
   }
-
-  while (funcRegex.test(expression)) {
-    expression = await expression.replaceAsync(funcRegex, async (match) => {
-      const result = await evaluateTerm(match);
-      return result.toString();
-    });
-  }
-
+  console.log(RESULT);
+  // console.log("result here:", result.toString());
   return expression;
 }
 
