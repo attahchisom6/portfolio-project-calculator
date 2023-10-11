@@ -152,8 +152,13 @@ async function refineExpression(expression) {
   async function evaluateTerm(match) {
     console.log("Matching:", match);
 
-    const matchRegex = /(\w+)\(([\s\S]*)\)/;
-    let [, funcName, args] = match.match(matchRegex);
+    const matchRegex = /(\w+)\(([^()]+)\)/g;
+    const matchArray = match.match(matchRegex);
+    let matchResult, k = 0;
+    while (k < matchArray.length) {
+    matchResult = matchArray[k];
+    console.log('match result:', matchResult);
+    let [, funcName, args] = matchResult.match(/(\w+)\(([\s\s]*)\)/);
 
     console.log("Function Name:", funcName);
     console.log("Arguments:", args);
@@ -307,6 +312,7 @@ async function refineExpression(expression) {
         console.log("Error in otherFuncs:", error);
         throw new Error(`${funcName}(${args})`);
       }
+    } k++;
     }
   }
 
