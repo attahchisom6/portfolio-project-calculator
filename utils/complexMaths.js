@@ -320,11 +320,11 @@ async function refineExpression(expression) {
   console.log('Match Array:', matchArray);
   let matchResult, k = 0;
   
-  /*if (!matchArray) {
+  if (!matchArray) {
     result = expression;
-    // RESULT.push(result);
+    RESULT.push(result);
     return result;
-  }*/
+  }
 
   for (let k = 0; k < matchArray.length; k += 1) {
     matchResult = matchArray[k];
@@ -332,9 +332,9 @@ async function refineExpression(expression) {
     while (funcRegex.test(matchResult)) {
       console.log('Expression here:', matchResult);
       expression = await matchResult.replaceAsync(funcRegex, async (match) => {
-        const res = await evaluateTerm(match);
-        RESULT.push(res);
-        return res.toString();
+        result = await evaluateTerm(match);
+        RESULT.push(result);
+        return result.toString();
       });
       break;
     }
