@@ -6,8 +6,6 @@ const { evaluateMathExpression } = require('./elementaryMaths');
 const Trig = require('./trig');
 const Logarithms = require('./logarithms');
 
-const loga = Logarithms;
-
 class complexMaths {
   static async squareX(x) {
     return new Promise((resolve) => {
@@ -144,6 +142,16 @@ const otherFuncs = {
   'PI': complexMaths.π,
   'F': complexMaths.factorial,
 }
+
+String.prototype.replaceAsync = async function (regex, asyncFn) {
+  const promises = [];
+  this.replace(regex, (match, ...args) => {
+    const promise = asyncFn(match, ...args);
+    promises.push(promise);
+  });
+  const results = await Promise.all(promises);
+  return this.replace(regex, () => results.shift());
+};
 
 async function evaluateTerm(match) {
   console.log("Matching:", match);
@@ -313,52 +321,63 @@ async function evaluateTerm(match) {
 async function refineExpression(expression) {
   const funcRegex = /(\w+)\s*\((.*)\)/g;
   const RESULT = [];
-  let result;
-
+  let result, expr = '';
   const matchRegex = /(\w+)\(([^()]+)\)/g;
   const matchArray = expression.match(matchRegex);
   console.log('Match Array:', matchArray);
   let matchResult, k = 0;
-  
-  if (!matchArray) {
-    result = expression;
-    RESULT.push(result);
-    return result;
-  }
 
-  for (let k = 0; k < matchArray.length; k += 1) {
-    matchResult = matchArray[k];
-
-    while (funcRegex.test(matchResult)) {
-      console.log('Expression here:', matchResult);
-      expression = await matchResult.replaceAsync(funcRegex, async (match) => {
-        result = await evaluateTerm(match);
-        RESULT.push(result);
-        return result.toString();
-      });
-      break;
-    }
+  while (funcRegex.test(expression)) {
+    expression = expression.replaceAsync(funcRegex, async (match) => {
+      result = await evaluateTerm(match);
+      RESULT.push(result);
+      return result.toString();
+    });
   }
   console.log(RESULT);
-  // console.log("result here:", result.toString());
   return expression;
 }
 
-String.prototype.replaceAsync = async function (regex, asyncFn) {
-  const promises = [];
-  this.replace(regex, (match, ...args) => {
-    const promise = asyncFn(match, ...args);
-    promises.push(promise);
-  });
-  const results = await Promise.all(promises);
-  return this.replace(regex, () => results.shift());
-};
+async function reviewedExpression(input) {
+  const funcRegex = /^([a-z]+)\(([^)]+)\)/i;
+  const numRegex = /^-?\d+(\.\d+)?/;
+
+  let remainingInput = input.trim();
+  let result = '';
+
+  while (remainingInput.length > 0) {
+    let match;
+
+    if ((match = remainingInput.match(funcRegex)) !== null) {
+      const [, funcName, args] = match;
+      const funcExpr = `${funcName}(${args})`;
+      console.log("funcName:", funcName);
+      console.log("Argument:", args);
+      result += await refineExpression(funcExpr);
+      console.log("resolved function call:", result);
+    } else if ((match = remainingInput.match(numRegex)) !== null) {
+      result += match[0];
+      console.log("first num:", result);
+    } else {
+      break;
+    }
+
+    // remove the first term from the remaining input
+    remainingInput = remainingInput.slice(match[0].length).trim();
+    if (remainingInput.length > 0) {
+      // remove the operator and add it tobthe result
+      result += remainingInput[0];
+      remainingInput = remainingInput.slice(1).trim();
+    }
+  }
+  return result;
+}
 
 async function evaluateComplexMathExpression(expression) {
-  expression = await refineExpression(expression);
+  expression = await reviewedExpression(expression);
   return await evaluateMathExpression(expression);
 }
 
-module.exports = { evaluateComplexMathExpression, refineExpression, complexMaths };
+module.exports = { evaluateComplexMathExpression };
 
 // export default evaluateComplexMathExpression;

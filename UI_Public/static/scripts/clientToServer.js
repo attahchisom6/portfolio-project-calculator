@@ -37,7 +37,6 @@ function addToDisplay(value) {
   if (currentExpression.includes('!')) {
     currentExpression = disect(currentExpression);
   }
-  // currentExpression = handleOperationWithoutOperator(currentExpression);
   displayedExpression += value;
 
   // handle displayedValue for keyboard keys
@@ -108,6 +107,10 @@ function lastOperationExpression() {
   displayedExpression = currentExpression;
   if (displayedExpression.includes('PI(anyArg)')) {
     displayedExpression = displayedExpression.replace('PI(anyArg)', 'π');
+  } else if (displayedExpression.includes('F')) {
+    const fRegex = /F\((\d+)\)/;
+    const num = displayedExpression.match(fRegex)[1];
+    displayedExpression = displayedExpression.replace(fRegex, `${num}!`);
   }
   inputField.value = displayedExpression;
 }
