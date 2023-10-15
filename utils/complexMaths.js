@@ -392,7 +392,12 @@ async function reviewedExpression(input) {
       console.log('argumements:', argumentsStr);
       // Evaluate the function and append it to the result
       const  argExpr = `${functionName}(${argumentsStr})`;
-      result += await refineExpression(argExpr);
+      try {
+        result += await refineExpression(argExpr);
+      } catch (error) {
+        console.error('An error here:', error);
+        result = argExpr;
+      }
     } else if ((match = remainingInput.match(numberRegex)) !== null) {
       // Extract the number and append it to the result
       result += match[0];
@@ -428,7 +433,7 @@ async function reviewedExpression(input) {
       }*/
       console.log(`input: ${input}, inputLength: ${input.length}`);
       console.log(`result: ${result}, resultLength: ${result.length}`);
-      remainingInput = input.slice(result.length);
+      remainingInput = input.toString().slice(result.length);
       let remainingResult = evaluateTerm(remainingInput);
       arg = await reviewedExpression(remainingResult);
       console.log('new result:', arg);
