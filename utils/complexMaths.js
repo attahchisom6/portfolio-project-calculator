@@ -349,7 +349,8 @@ function completeBracket(expr) {
   let count = 0;
   if (!expr) {
     return count;
-  }                                              for (const char of expr) {
+  }
+  for (const char of expr) {
     if (char === '(') {
       count++;
     } else if (char === ')') {
@@ -359,7 +360,7 @@ function completeBracket(expr) {
   return Math.abs(count);
 }
 
-async function reviewExpression(input) {
+async function reviewedExpression(input) {
   // Regular expression to match function calls at the beginning of the input
   const functionRegex = /^([a-z]+)\(([^)]+)\)/i;
   let arg;
@@ -382,17 +383,11 @@ async function reviewExpression(input) {
       // Extract the function and its arguments
       const functionName = match[1];
       let argumentsStr = match[2];
-      for (const char of argumentsStr) {
-        if (char === '(') {
-          nestedCount++;
-        } else if (char === ')') {
-          nestedCount--;
-        }
-      }
 
+      nestedCount = completeBracket(argumentsStr);
       console.log('nested count:', nestedCount);
       argumentsStr += ')'.repeat(nestedCount);
-      arg = argumentsStr;
+      // arg = argumentsStr;
       console.log('functionName:', functionName);
       console.log('argumements:', argumentsStr);
       // Evaluate the function and append it to the result
@@ -419,7 +414,8 @@ async function reviewExpression(input) {
     input = input.split(/([-+*/%])/).map((arg) => arg.trim()).join(' ')
     if (input.length === result.length) {
       console.log('input and result has the same length');
-      console.log(`input: ${input}, inputLength: ${input.length}`);                                 console.log(`result: ${result}, resultLength: ${result.length}`);
+      console.log(`input: ${input}, inputLength: ${input.length}`);
+      console.log(`result: ${result}, resultLength: ${result.length}`);
     } else if (input.length - result.length > 0) {
       console.log("uneven length of result and input");
       /*nestedCount = completeBracket(result);
@@ -434,7 +430,7 @@ async function reviewExpression(input) {
       console.log(`result: ${result}, resultLength: ${result.length}`);
       remainingInput = input.slice(result.length);
       let remainingResult = evaluateTerm(remainingInput);
-      arg = reviewedExpression(remainingResult);
+      arg = await reviewedExpression(remainingResult);
       console.log('new result:', arg);
     }
   }
