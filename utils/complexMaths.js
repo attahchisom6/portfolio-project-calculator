@@ -338,38 +338,107 @@ async function refineExpression(expression) {
   return expression;
 }
 
-async function reviewedExpression(input) {
-  const funcRegex = /^([a-z]+)\(([^)]+)\)/i;
-  const numRegex = /^-?\d+(\.\d+)?/;
+function isFloatParsable(num) {
+  if (num === '') {
+    return false;
+  }
+  return !isNaN(parseFloat(num));
+}
+
+function completeBracket(expr) {
+  let count = 0;
+  if (!expr) {
+    return count;
+  }                                              for (const char of expr) {
+    if (char === '(') {
+      count++;
+    } else if (char === ')') {
+      count--;
+    }
+  }
+  return Math.abs(count);
+}
+
+async function reviewExpression(input) {
+  // Regular expression to match function calls at the beginning of the input
+  const functionRegex = /^([a-z]+)\(([^)]+)\)/i;
+  let arg;
+  if (isFloatParsable(input) || isFloatParsable(input.slice(1))) {
+    arg = input;
+    return arg;
+  }
+  // Regular expression to match numbers at the beginning of the input
+  const numberRegex = /^-?\d+(\.\d+)?/;
 
   let remainingInput = input.trim();
   let result = '';
+  let nestedCount = 0;
 
+  // Loop until there is no remaining input
   while (remainingInput.length > 0) {
     let match;
+    // Check if the remaining input starts with a function call
+    if ((match = remainingInput.match(functionRegex)) !== null) {
+      // Extract the function and its arguments
+      const functionName = match[1];
+      let argumentsStr = match[2];
+      for (const char of argumentsStr) {
+        if (char === '(') {
+          nestedCount++;
+        } else if (char === ')') {
+          nestedCount--;
+        }
+      }
 
-    if ((match = remainingInput.match(funcRegex)) !== null) {
-      const [, funcName, args] = match;
-      const funcExpr = `${funcName}(${args})`;
-      console.log("funcName:", funcName);
-      console.log("Argument:", args);
-      result += await refineExpression(funcExpr);
-      console.log("resolved function call:", result);
-    } else if ((match = remainingInput.match(numRegex)) !== null) {
+      console.log('nested count:', nestedCount);
+      argumentsStr += ')'.repeat(nestedCount);
+      arg = argumentsStr;
+      console.log('functionName:', functionName);
+      console.log('argumements:', argumentsStr);
+      // Evaluate the function and append it to the result
+      const  argExpr = `${functionName}(${argumentsStr})`;
+      result += await refineExpression(argExpr);
+    } else if ((match = remainingInput.match(numberRegex)) !== null) {
+      // Extract the number and append it to the result
       result += match[0];
-      console.log("first num:", result);
     } else {
+      // if neither function or number, break the loop
       break;
     }
 
-    // remove the first term from the remaining input
+    // Remove the processed part from the input
     remainingInput = remainingInput.slice(match[0].length).trim();
+    // If there is more input, append the operator to the result
     if (remainingInput.length > 0) {
-      // remove the operator and add it tobthe result
       result += remainingInput[0];
+      // Remove the operator from the input
       remainingInput = remainingInput.slice(1).trim();
     }
+
+    result = result.split(/([-+*/%])/).map((arg) => arg.trim()).join(' ')
+    input = input.split(/([-+*/%])/).map((arg) => arg.trim()).join(' ')
+    if (input.length === result.length) {
+      console.log('input and result has the same length');
+      console.log(`input: ${input}, inputLength: ${input.length}`);                                 console.log(`result: ${result}, resultLength: ${result.length}`);
+    } else if (input.length - result.length > 0) {
+      console.log("uneven length of result and input");
+      /*nestedCount = completeBracket(result);
+      console.log('another nestedCount:', nestedCount);
+      let rem = result;
+      const len = rem.length;
+      if (nestedCount > 0) {
+        result = result.slice(0, len - nestedCount);
+        console.log('another modified result:', result);
+      }*/
+      console.log(`input: ${input}, inputLength: ${input.length}`);
+      console.log(`result: ${result}, resultLength: ${result.length}`);
+      remainingInput = input.slice(result.length);
+      let remainingResult = evaluateTerm(remainingInput);
+      arg = reviewedExpression(remainingResult);
+      console.log('new result:', arg);
+    }
   }
+  result = result + arg;
   return result;
 }
 
