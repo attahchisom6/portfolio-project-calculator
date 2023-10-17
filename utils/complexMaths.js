@@ -338,113 +338,95 @@ async function refineExpression(expression) {
   return expression;
 }
 
-function isFloatParsable(num) {
-  if (num === '') {
-    return false;
-  }
-  return !isNaN(parseFloat(num));
-}
-
-function completeBracket(expr) {
-  let count = 0;
-  if (!expr) {
-    return count;
-  }
-  for (const char of expr) {
-    if (char === '(') {
-      count++;
-    } else if (char === ')') {
-      count--;
-    }
-  }
-  return Math.abs(count);
-}
+let res;
 
 async function reviewedExpression(input) {
-  // Regular expression to match function calls at the beginning of the input
-  const functionRegex = /^([a-z]+)\(([^)]+)\)/i;
-  let arg;
-  if (isFloatParsable(input) || isFloatParsable(input.slice(1))) {
-    arg = input;
-    return arg;
+  const funcRegex = /^([a-z]+)\(([^)]+)\)/i;
+  const numRegex = /^-?\d+(\.\d+)?/;
+
+  if (input[0] === '+') {
+    input = input.slice(1);
   }
-  // Regular expression to match numbers at the beginning of the input
-  const numberRegex = /^-?\d+(\.\d+)?/;
-
   let remainingInput = input.trim();
-  let result = '';
-  let nestedCount = 0;
+  let result = '', nestedCount = 0;
 
-  // Loop until there is no remaining input
   while (remainingInput.length > 0) {
     let match;
-    // Check if the remaining input starts with a function call
-    if ((match = remainingInput.match(functionRegex)) !== null) {
-      // Extract the function and its arguments
-      const functionName = match[1];
-      let argumentsStr = match[2];
 
-      nestedCount = completeBracket(argumentsStr);
-      console.log('nested count:', nestedCount);
-      argumentsStr += ')'.repeat(nestedCount);
-      // arg = argumentsStr;
-      console.log('functionName:', functionName);
-      console.log('argumements:', argumentsStr);
-      // Evaluate the function and append it to the result
-      const  argExpr = `${functionName}(${argumentsStr})`;
-      try {
-        result += await refineExpression(argExpr);
-      } catch (error) {
-        console.error('An error here:', error);
-        result = argExpr;
+    if ((match = remainingInput.match(funcRegex)) !== null) {
+      let [, funcName, args] = match;
+
+      // because of the limitatitions in regex we will have to manually add closing paranthesis as needed
+      for (const char of args) {
+        if (char === "(") {
+          nestedCount++;
+        } else if (char === ')') {
+          nestedCount--;
+        }
       }
-    } else if ((match = remainingInput.match(numberRegex)) !== null) {
-      // Extract the number and append it to the result
+      console.log("nested count:", nestedCount);
+
+      args += ')'.repeat(nestedCount);
+      const funcExpr = `${funcName}(${args})`;
+      console.log("funcName:", funcName);
+      console.log("Argument:", args);
+      result += await refineExpression(funcExpr);
+      console.log("resolved function call:", result);
+    } else if ((match = remainingInput.match(numRegex)) !== null) {
       result += match[0];
+      console.log("first num:", result);
     } else {
-      // if neither function or number, break the loop
       break;
     }
 
-    // Remove the processed part from the input
+    // remove the first term from the remaining input
     remainingInput = remainingInput.slice(match[0].length).trim();
-    // If there is more input, append the operator to the result
     if (remainingInput.length > 0) {
+      // remove the operator and add it to the result
       result += remainingInput[0];
-      // Remove the operator from the input
       remainingInput = remainingInput.slice(1).trim();
     }
-
-    result = result.split(/([-+*/%])/).map((arg) => arg.trim()).join(' ')
-    input = input.split(/([-+*/%])/).map((arg) => arg.trim()).join(' ')
-    if (input.length === result.length) {
-      console.log('input and result has the same length');
-      console.log(`input: ${input}, inputLength: ${input.length}`);
-      console.log(`result: ${result}, resultLength: ${result.length}`);
-    } else if (input.length - result.length > 0) {
-      console.log("uneven length of result and input");
-      /*nestedCount = completeBracket(result);
-      console.log('another nestedCount:', nestedCount);
-      let rem = result;
-      const len = rem.length;
-      if (nestedCount > 0) {
-        result = result.slice(0, len - nestedCount);
-        console.log('another modified result:', result);
-      }*/
-      console.log(`input: ${input}, inputLength: ${input.length}`);
-      console.log(`result: ${result}, resultLength: ${result.length}`);
-      remainingInput = input.toString().slice(result.length);
-      let remainingResult = evaluateTerm(remainingInput);
-      arg = await reviewedExpression(remainingResult);
-      console.log('new result:', arg);
-    }
   }
-  result = result + arg;
+
+  const spacedResult = result.split(/([-+*/%])/).map((arg) => arg.trim()).join(' ')
+  const inputArg = input.split(/([-+*/%])/).map((arg) => arg.trim()).join(' ')
+  if (inputArg.length === spacedResult.length) {
+    console.log('input and result has the same length');
+    console.log(`input: ${inputArg}, inputLength: ${inputArg.length}`);
+    console.log(`result: ${spacedResult}, resultLength: ${spacedResult.length}`);
+  } else if (inputArg.length - spacedResult.length > 0) {
+    console.log("uneven length of result and input");
+    console.log(`input: ${inputArg}, inputLength: ${inputArg.length}`);
+    console.log(`result: ${spacedResult}, resultLength: ${spacedResult.length}`);
+    res = inputArg.slice(spacedResult.length).split(/([-+*/%])/).map((arg) => arg.trim()).join('');
+  }
+  return result;
+}
+
+async function summarizeExpression(expression) {
+  const RESULT = [];
+  let initial = await reviewedExpression(expression);
+  let result = '';
+  console.log('first accumulated result:', initial)
+  if (!res) {
+    return initial;
+  }
+  while (res.length > 0) {
+    if (res[0] === '+') {
+      result += '+';
+    }
+    result += await reviewedExpression(res);
+    RESULT.push(result);
+    break;
+  }
+  console.log('result array:', RESULT);
+  result = initial + RESULT.map((arg) => arg.trim()).join('');
+  res = '';
   return result;
 }
 
 async function evaluateComplexMathExpression(expression) {
-  expression = await reviewedExpression(expression);
+  expression = await summarizeExpression(expression);
   return await evaluateMathExpression(expression);
 }
 
