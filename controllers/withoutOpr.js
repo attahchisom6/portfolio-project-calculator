@@ -49,5 +49,5 @@ function handleOperationWithoutOperator(expression) {
   return expr;
 }
 
-module.exports = handleOperationWithoutOperator;
-// export default handleOperationWithoutOperator;
+// module.exports = handleOperationWithoutOperator;
+export default handleOperationWithoutOperator;

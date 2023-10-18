@@ -1,10 +1,10 @@
-/* import evaluateMathExpression from './elementaryMaths';
+import evaluateMathExpression from './elementaryMaths';
 import Trig from './trig';
-import Logarithms from './logarithms';*/
+import Logarithms from './logarithms';
 
-const { evaluateMathExpression } = require('./elementaryMaths');
+/*const { evaluateMathExpression } = require('./elementaryMaths');
 const Trig = require('./trig');
-const Logarithms = require('./logarithms');
+const Logarithms = require('./logarithms');*/
 
 class complexMaths {
   static async squareX(x) {
@@ -430,6 +430,6 @@ async function evaluateComplexMathExpression(expression) {
   return await evaluateMathExpression(expression);
 }
 
-module.exports = { evaluateComplexMathExpression };
+// module.exports = { evaluateComplexMathExpression };
 
-// export default evaluateComplexMathExpression;
+export default evaluateComplexMathExpression;
