@@ -1,4 +1,4 @@
-const trigFunctions = ["sin", "cos", "tan",  "cosec", "sec", "cot", "asin", "acos", "atan", "p(anyArg)", 'log', 'In'];
+const trigFunctions = ["sin", "cos", "tan",  "cosec", "sec", "cot", "asin", "acos", "atan", "PI(anyArg)", 'log', 'In'];
 
 function isFloatParsable(num) {
   if (num === '') {
